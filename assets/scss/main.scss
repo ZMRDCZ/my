@@ -1,0 +1,402 @@
+// Import variables and color module
+@use 'sass:color';
+@use 'variables' as *;
+@use 'responsive' as *;
+
+// Reset and base styles
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  height: 100%;
+  font-size: 16px; // Base font size for rem calculations
+  
+  @include mobile {
+    font-size: 14px; // Slightly smaller base font for mobile
+  }
+  
+  @include xs {
+    font-size: 13px; // Even smaller for very small screens
+  }
+}
+
+body {
+  font-family: $font-body;
+  background-color: $bg-primary;
+  color: $color-white;
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  // Neon gradient background
+  background: linear-gradient(
+    135deg,
+    $color-primary 0%,
+    color.adjust($color-secondary, $lightness: -30%) 25%,
+    $color-primary 50%,
+    color.adjust($color-tertiary, $lightness: -30%) 75%,
+    $color-primary 100%
+  );
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  
+  // Reduce animation on mobile for better performance
+  @include touch-device {
+    animation: gradientShift 20s ease infinite;
+  }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+// Typography
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-primary;
+  font-weight: 700;
+  line-height: 1.2;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+h1 {
+  font-size: $text-5xl;
+  @include mobile {
+    font-size: $text-4xl;
+  }
+  @include xs {
+    font-size: $text-3xl;
+  }
+}
+
+h2 {
+  font-size: $text-4xl;
+  @include mobile {
+    font-size: $text-3xl;
+  }
+  @include xs {
+    font-size: $text-2xl;
+  }
+}
+
+h3 {
+  font-size: $text-3xl;
+  @include mobile {
+    font-size: $text-2xl;
+  }
+  @include xs {
+    font-size: $text-xl;
+  }
+}
+
+p {
+  font-family: $font-secondary;
+  margin-bottom: $spacing-4;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+a {
+  color: $color-neon-cyan;
+  text-decoration: none;
+  transition: $transition-normal;
+  
+  &:hover {
+    @include neon-text($color-neon-cyan);
+    text-decoration: underline;
+  }
+  
+  // Improve touch targets on mobile
+  @include touch-device {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+// Utility classes
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 $spacing-4;
+  
+  @include mobile {
+    padding: 0 $spacing-3;
+  }
+  
+  @include tablet {
+    padding: 0 $spacing-6;
+  }
+  
+  @include desktop {
+    padding: 0 $spacing-8;
+  }
+}
+
+.section {
+  padding: $spacing-20 0;
+  
+  @include mobile {
+    padding: $spacing-12 0;
+  }
+  
+  @include xs {
+    padding: $spacing-8 0;
+  }
+}
+
+.neon-border {
+  border: 2px solid transparent;
+  background: linear-gradient($bg-card, $bg-card) padding-box,
+              linear-gradient(45deg, $color-neon-pink, $color-neon-cyan) border-box;
+  border-radius: $radius-lg;
+}
+
+.neon-button {
+  background: linear-gradient(45deg, $color-neon-pink, $color-neon-cyan);
+  border: none;
+  border-radius: $radius-md;
+  padding: $spacing-3 $spacing-6;
+  color: $color-white;
+  font-family: $font-primary;
+  font-weight: 600;
+  cursor: pointer;
+  transition: $transition-normal;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px; // Touch target size
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: $transition-slow;
+  }
+  
+  &:hover {
+    transform: translateY(-2px);
+    @include neon-glow($color-neon-cyan, 5px);
+    
+    &::before {
+      left: 100%;
+    }
+  }
+  
+  // Touch device optimizations
+  @include touch-device {
+    &:hover {
+      transform: none;
+    }
+    
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+  
+  @include mobile {
+    padding: $spacing-4 $spacing-6;
+    font-size: $text-base;
+  }
+}
+
+.card {
+  background: $bg-card;
+  border-radius: $radius-xl;
+  padding: $spacing-6;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: $transition-normal;
+  
+  &:hover {
+    transform: translateY(-5px);
+    @include neon-glow($color-neon-purple, 3px);
+  }
+  
+  // Touch device optimizations
+  @include touch-device {
+    &:hover {
+      transform: none;
+    }
+    
+    &:active {
+      transform: translateY(-2px);
+    }
+  }
+  
+  @include mobile {
+    padding: $spacing-4;
+    border-radius: $radius-lg;
+  }
+}
+
+.text-gradient {
+  background: linear-gradient(45deg, $color-neon-pink, $color-neon-cyan);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Loading animation
+.pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+// Scrollbar
+::-webkit-scrollbar {
+  width: 8px;
+  
+  @include mobile {
+    width: 6px;
+  }
+}
+
+::-webkit-scrollbar-track {
+  background: $color-gray-900;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, $color-neon-pink, $color-neon-cyan);
+  border-radius: $radius-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, color.adjust($color-neon-pink, $lightness: 10%), color.adjust($color-neon-cyan, $lightness: 10%));
+}
+
+// Selection
+::selection {
+  background: rgba(255, 0, 110, 0.3);
+  color: $color-white;
+}
+
+::-moz-selection {
+  background: rgba(255, 0, 110, 0.3);
+  color: $color-white;
+}
+
+// Responsive grid utilities
+.grid {
+  display: grid;
+  gap: $spacing-6;
+  
+  &.grid-1 { grid-template-columns: 1fr; }
+  &.grid-2 { 
+    grid-template-columns: repeat(2, 1fr);
+    @include mobile { grid-template-columns: 1fr; }
+  }
+  &.grid-3 { 
+    grid-template-columns: repeat(3, 1fr);
+    @include mobile { grid-template-columns: 1fr; }
+    @include tablet { grid-template-columns: repeat(2, 1fr); }
+  }
+  &.grid-4 { 
+    grid-template-columns: repeat(4, 1fr);
+    @include mobile { grid-template-columns: 1fr; }
+    @include tablet { grid-template-columns: repeat(2, 1fr); }
+  }
+  &.grid-auto-fit {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    @include mobile { grid-template-columns: 1fr; }
+  }
+}
+
+// Flex utilities
+.flex {
+  display: flex;
+  
+  &.flex-col {
+    flex-direction: column;
+  }
+  
+  &.flex-wrap {
+    flex-wrap: wrap;
+  }
+  
+  &.items-center {
+    align-items: center;
+  }
+  
+  &.justify-center {
+    justify-content: center;
+  }
+  
+  &.justify-between {
+    justify-content: space-between;
+  }
+  
+  &.gap-2 { gap: $spacing-2; }
+  &.gap-4 { gap: $spacing-4; }
+  &.gap-6 { gap: $spacing-6; }
+  &.gap-8 { gap: $spacing-8; }
+}
+
+// Text utilities
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+// Spacing utilities
+.mt-4 { margin-top: $spacing-4; }
+.mt-6 { margin-top: $spacing-6; }
+.mt-8 { margin-top: $spacing-8; }
+.mb-4 { margin-bottom: $spacing-4; }
+.mb-6 { margin-bottom: $spacing-6; }
+.mb-8 { margin-bottom: $spacing-8; }
+.p-4 { padding: $spacing-4; }
+.p-6 { padding: $spacing-6; }
+.p-8 { padding: $spacing-8; }
+
+// Hide/show utilities
+.hidden { display: none; }
+.block { display: block; }
+.inline-block { display: inline-block; }
+
+@include mobile {
+  .hidden-mobile { display: none; }
+  .block-mobile { display: block; }
+}
+
+@include tablet-and-desktop {
+  .hidden-desktop { display: none; }
+  .block-desktop { display: block; }
+} 

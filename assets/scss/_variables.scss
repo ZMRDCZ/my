@@ -1,0 +1,164 @@
+// Color Variables
+$color-primary: #000000;      // Black
+$color-secondary: #8B5CF6;    // Purple
+$color-tertiary: #3B82F6;     // Blue
+$color-neon-pink: #FF006E;    // Neon Pink
+$color-neon-cyan: #00F5FF;    // Neon Cyan
+$color-neon-purple: #BF00FF;  // Neon Purple
+$color-neon-green: #39FF14;   // Neon Green
+$color-white: #FFFFFF;
+$color-gray-100: #F3F4F6;
+$color-gray-200: #E5E7EB;
+$color-gray-300: #D1D5DB;
+$color-gray-400: #9CA3AF;
+$color-gray-500: #6B7280;
+$color-gray-600: #4B5563;
+$color-gray-700: #374151;
+$color-gray-800: #1F2937;
+$color-gray-900: #111827;
+
+// Background Colors
+$bg-primary: $color-primary;
+$bg-card: rgba(15, 15, 15, 0.9);
+$bg-overlay: rgba(0, 0, 0, 0.8);
+
+// Typography
+$font-primary: 'Orbitron', sans-serif;
+$font-secondary: 'Inter', sans-serif;
+$font-body: 'Roboto', sans-serif;
+
+// Font Sizes
+$text-xs: 0.75rem;    // 12px
+$text-sm: 0.875rem;   // 14px
+$text-base: 1rem;     // 16px
+$text-lg: 1.125rem;   // 18px
+$text-xl: 1.25rem;    // 20px
+$text-2xl: 1.5rem;    // 24px
+$text-3xl: 1.875rem;  // 30px
+$text-4xl: 2.25rem;   // 36px
+$text-5xl: 3rem;      // 48px
+$text-6xl: 3.75rem;   // 60px
+
+// Spacing
+$spacing-1: 0.25rem;   // 4px
+$spacing-2: 0.5rem;    // 8px
+$spacing-3: 0.75rem;   // 12px
+$spacing-4: 1rem;      // 16px
+$spacing-5: 1.25rem;   // 20px
+$spacing-6: 1.5rem;    // 24px
+$spacing-8: 2rem;      // 32px
+$spacing-10: 2.5rem;   // 40px
+$spacing-12: 3rem;     // 48px
+$spacing-16: 4rem;     // 64px
+$spacing-20: 5rem;     // 80px
+$spacing-24: 6rem;     // 96px
+
+// Breakpoints
+$breakpoint-xs: 480px;
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+$breakpoint-2xl: 1536px;
+
+// Z-Index
+$z-modal: 1000;
+$z-dropdown: 100;
+$z-header: 50;
+$z-overlay: 40;
+
+// Border Radius
+$radius-sm: 0.25rem;   // 4px
+$radius-md: 0.5rem;    // 8px
+$radius-lg: 0.75rem;   // 12px
+$radius-xl: 1rem;      // 16px
+$radius-2xl: 1.5rem;   // 24px
+$radius-full: 50%;
+
+// Transitions
+$transition-fast: 0.15s ease;
+$transition-normal: 0.3s ease;
+$transition-slow: 0.5s ease;
+
+// Shadows
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+$shadow-neon-pink: 0 0 20px rgba(255, 0, 110, 0.5);
+$shadow-neon-cyan: 0 0 20px rgba(0, 245, 255, 0.5);
+$shadow-neon-purple: 0 0 20px rgba(191, 0, 255, 0.5);
+
+// Neon effects
+@mixin neon-glow($color, $size: 10px) {
+  box-shadow: 
+    0 0 $size $color,
+    0 0 #{$size * 2} $color,
+    0 0 #{$size * 3} $color;
+}
+
+@mixin neon-text($color) {
+  color: $color;
+  text-shadow: 
+    0 0 5px $color,
+    0 0 10px $color,
+    0 0 15px $color,
+    0 0 20px $color;
+}
+
+// Responsive mixins
+@mixin xs {
+  @media (max-width: #{$breakpoint-xs - 1px}) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media (max-width: #{$breakpoint-sm - 1px}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: $breakpoint-sm) and (max-width: #{$breakpoint-lg - 1px}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: $breakpoint-lg) {
+    @content;
+  }
+}
+
+@mixin large-desktop {
+  @media (min-width: $breakpoint-xl) {
+    @content;
+  }
+}
+
+@mixin mobile-and-tablet {
+  @media (max-width: #{$breakpoint-lg - 1px}) {
+    @content;
+  }
+}
+
+@mixin tablet-and-desktop {
+  @media (min-width: $breakpoint-sm) {
+    @content;
+  }
+}
+
+// Touch device detection
+@mixin touch-device {
+  @media (hover: none) and (pointer: coarse) {
+    @content;
+  }
+}
+
+// High DPI displays
+@mixin retina {
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    @content;
+  }
+} 

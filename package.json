@@ -1,0 +1,28 @@
+{
+  "name": "dmitry-komarov-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Интерактивное портфолио Дмитрия Комарова",
+  "homepage": "https://zmrdcz.github.io/my/",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "deploy": "npm run generate && touch .output/public/.nojekyll"
+  },
+  "devDependencies": {
+    "@nuxt/devtools": "latest",
+    "@nuxtjs/google-fonts": "^3.0.2",
+    "nuxt": "^3.8.0"
+  },
+  "dependencies": {
+    "@nuxtjs/i18n": "^8.0.0",
+    "@vueuse/core": "^10.5.0",
+    "@vueuse/nuxt": "^10.5.0",
+    "gsap": "^3.12.2",
+    "sass": "^1.69.5",
+    "vue-toastification": "^2.0.0-rc.5"
+  }
+} 
