@@ -32,8 +32,7 @@ export default defineNuxtConfig({
   // Modules
   modules: [
     '@vueuse/nuxt',
-    '@nuxtjs/google-fonts',
-    '@nuxtjs/i18n'
+    '@nuxtjs/google-fonts'
   ],
 
   // Google Fonts
@@ -43,15 +42,6 @@ export default defineNuxtConfig({
       'Roboto': [300, 400, 500, 700],
       'Inter': [300, 400, 500, 600, 700]
     }
-  },
-
-  // Internationalization
-  i18n: {
-    defaultLocale: 'ru',
-    locales: [
-      { code: 'ru', iso: 'ru-RU', name: 'Русский' },
-      { code: 'en', iso: 'en-US', name: 'English' }
-    ]
   },
 
   // SCSS Configuration
