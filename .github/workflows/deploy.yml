@@ -13,6 +13,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
       
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -29,10 +31,17 @@ jobs:
     - name: Build
       run: npm run generate
       
+    - name: Configure Git
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       if: github.ref == 'refs/heads/main'
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./.output/public
-        force_orphan: true 
+        force_orphan: true
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com' 
