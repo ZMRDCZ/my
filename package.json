@@ -13,9 +13,9 @@
     "deploy": "npm run generate && touch .output/public/.nojekyll"
   },
   "devDependencies": {
-    "@nuxt/devtools": "latest",
+    "@nuxt/devtools": "^1.0.8",
     "@nuxtjs/google-fonts": "^3.0.2",
-    "nuxt": "^3.8.0"
+    "nuxt": "^3.7.4"
   },
   "dependencies": {
     "@vueuse/core": "^10.5.0",
@@ -23,5 +23,8 @@
     "gsap": "^3.12.2",
     "sass": "^1.69.5",
     "vue-toastification": "^2.0.0-rc.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
