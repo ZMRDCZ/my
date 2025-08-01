@@ -1,14 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  
-  // GitHub Pages configuration
   app: {
-    baseURL: '/my/',
-    
-    // Recommended for GitHub Pages, avoids issues with Jekyll
+    baseURL: '/',
     buildAssetsDir: 'assets',
-
     head: {
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
@@ -23,22 +18,14 @@ export default defineNuxtConfig({
       ]
     }
   },
-
-  // Compatibility date
-  compatibilityDate: '2024-04-03',
-  
-  // CSS Configuration
+  // compatibilityDate: '2024-04-03', // удалить эту строку
   css: [
     '~/assets/scss/main.scss'
   ],
-
-  // Modules
   modules: [
     '@vueuse/nuxt',
     '@nuxtjs/google-fonts'
   ],
-
-  // Google Fonts
   googleFonts: {
     families: {
       'Orbitron': [300, 400, 500, 700, 900],
@@ -46,8 +33,6 @@ export default defineNuxtConfig({
       'Inter': [300, 400, 500, 600, 700]
     }
   },
-
-  // SCSS Configuration
   vite: {
     css: {
       preprocessorOptions: {
@@ -57,9 +42,7 @@ export default defineNuxtConfig({
       }
     }
   },
-
-  // Build configuration for GitHub Pages
   experimental: {
     payloadExtraction: false
   }
-}) 
+})
