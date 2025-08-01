@@ -4,8 +4,8 @@ export default defineNuxtConfig({
   
   // GitHub Pages configuration
   app: {
-    baseURL: process.env.NODE_ENV === 'production' ? '/my/' : '/',
-    buildAssetsDir: '/_nuxt/',
+    baseURL: '/my/',
+    buildAssetsDir: '_nuxt/',
     head: {
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',

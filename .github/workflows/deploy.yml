@@ -36,6 +36,10 @@ jobs:
     - name: Create .nojekyll file
       run: touch .output/public/.nojekyll
       
+    - name: Fix asset paths
+      run: |
+        sed -i 's|/_nuxt/|/my/_nuxt/|g' .output/public/index.html
+      
     - name: Configure Git
       run: |
         git config --global user.name "github-actions[bot]"
@@ -49,5 +53,4 @@ jobs:
         publish_dir: ./.output/public
         force_orphan: true
         user_name: 'github-actions[bot]'
-        user_email: 'github-actions[bot]@users.noreply.github.com'
-        cname: '' 
+        user_email: 'github-actions[bot]@users.noreply.github.com' 
