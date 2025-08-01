@@ -5,7 +5,10 @@ export default defineNuxtConfig({
   // GitHub Pages configuration
   app: {
     baseURL: '/my/',
-    buildAssetsDir: '_nuxt/',
+    
+    // Recommended for GitHub Pages, avoids issues with Jekyll
+    buildAssetsDir: 'assets',
+
     head: {
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
@@ -54,17 +57,6 @@ export default defineNuxtConfig({
       }
     }
   },
-
-  // Static site generation for GitHub Pages
-  nitro: {
-    prerender: {
-      routes: ['/']
-    },
-    preset: 'static'
-  },
-
-  // SSG configuration
-  ssr: false,
 
   // Build configuration for GitHub Pages
   experimental: {
