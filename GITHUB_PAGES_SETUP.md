@@ -1,5 +1,15 @@
 # Настройка GitHub Pages для портфолио
 
+## Исправление ошибок 404 для CSS/JS файлов
+
+### Проблема
+Ошибки 404 для файлов типа `entry.xtMf2K_c.css`, `BI1z9Nda.js` и других - это распространенная проблема с Nuxt.js на GitHub Pages.
+
+### Решение
+1. ✅ Обновлена конфигурация `nuxt.config.ts`
+2. ✅ Исправлен GitHub Actions workflow
+3. ✅ Добавлены правильные настройки для production сборки
+
 ## Шаги для публикации на GitHub Pages:
 
 ### 1. Создание репозитория на GitHub
@@ -23,6 +33,8 @@ git remote set-url origin https://YOUR_TOKEN@github.com/ZMRDCZ/my.git
 
 ### 4. Пуш изменений
 ```bash
+git add .
+git commit -m "Fix GitHub Pages deployment configuration"
 git push -u origin main
 ```
 
@@ -40,11 +52,12 @@ git push -u origin main
 
 ## Структура проекта для GitHub Pages
 
-Проект уже настроен для GitHub Pages:
-- ✅ Base URL: `/my/`
+Проект настроен для GitHub Pages:
+- ✅ Base URL: `/my/` (в production)
 - ✅ Static generation (SSG)
 - ✅ GitHub Actions workflow
 - ✅ Правильная конфигурация Nuxt
+- ✅ Исправлены пути к assets
 
 ## Локальная разработка
 
@@ -57,6 +70,23 @@ npm run dev
 ```bash
 npm run generate
 ```
+
+Для ручного деплоя:
+```bash
+npm run deploy:manual
+```
+
+## Исправления в конфигурации
+
+### nuxt.config.ts
+- ✅ Динамический `baseURL` для production/development
+- ✅ Правильный `buildAssetsDir`
+- ✅ Отключен `payloadExtraction` для лучшей совместимости
+
+### GitHub Actions (.github/workflows/deploy.yml)
+- ✅ Установлен `NODE_ENV=production` для сборки
+- ✅ Добавлен `.nojekyll` файл
+- ✅ Правильная конфигурация для gh-pages
 
 ## Возможные проблемы
 
@@ -72,4 +102,9 @@ npm run generate
 
 ### Проблемы с роутингом
 - Убедитесь, что `baseURL: '/my/'` установлен в `nuxt.config.ts`
-- Проверьте, что `ssr: false` и `target: 'static'` установлены 
+- Проверьте, что `ssr: false` и `target: 'static'` установлены
+
+### Ошибки 404 для assets
+- ✅ Исправлено в обновленной конфигурации
+- Убедитесь, что используется последняя версия конфигурации
+- Проверьте, что `.nojekyll` файл создается при деплое 

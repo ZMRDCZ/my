@@ -29,7 +29,12 @@ jobs:
       run: npm ci
       
     - name: Build
-      run: npm run generate
+      run: |
+        export NODE_ENV=production
+        npm run generate
+      
+    - name: Create .nojekyll file
+      run: touch .output/public/.nojekyll
       
     - name: Configure Git
       run: |
@@ -44,4 +49,5 @@ jobs:
         publish_dir: ./.output/public
         force_orphan: true
         user_name: 'github-actions[bot]'
-        user_email: 'github-actions[bot]@users.noreply.github.com' 
+        user_email: 'github-actions[bot]@users.noreply.github.com'
+        cname: '' 

@@ -10,11 +10,13 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "deploy": "npm run generate && touch .output/public/.nojekyll"
+    "deploy": "npm run generate && touch .output/public/.nojekyll && gh-pages -d .output/public",
+    "deploy:manual": "NODE_ENV=production npm run generate && touch .output/public/.nojekyll && gh-pages -d .output/public"
   },
   "devDependencies": {
     "@nuxt/devtools": "^1.0.8",
     "@nuxtjs/google-fonts": "^3.0.2",
+    "gh-pages": "^6.3.0",
     "nuxt": "^3.7.4"
   },
   "dependencies": {

@@ -4,8 +4,8 @@ export default defineNuxtConfig({
   
   // GitHub Pages configuration
   app: {
-    baseURL: '/my/', // GitHub Pages base URL
-    buildAssetsDir: '/my/_nuxt/',
+    baseURL: process.env.NODE_ENV === 'production' ? '/my/' : '/',
+    buildAssetsDir: '/_nuxt/',
     head: {
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
@@ -59,10 +59,15 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       routes: ['/']
-    }
+    },
+    preset: 'static'
   },
 
   // SSG configuration
   ssr: false,
-  target: 'static'
+
+  // Build configuration for GitHub Pages
+  experimental: {
+    payloadExtraction: false
+  }
 }) 
