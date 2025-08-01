@@ -10,8 +10,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "deploy": "npm run generate && touch .output/public/.nojekyll && gh-pages -d .output/public",
-    "deploy:manual": "NODE_ENV=production npm run generate && touch .output/public/.nojekyll && gh-pages -d .output/public"
+    "deploy": "npm run generate && (echo. > .output/public/.nojekyll) && gh-pages -d .output/public",
+    "deploy:manual": "NODE_ENV=production npm run generate && (echo. > .output/public/.nojekyll) && gh-pages -d .output/public"
   },
   "devDependencies": {
     "@nuxt/devtools": "^1.0.8",
