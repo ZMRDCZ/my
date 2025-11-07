@@ -82,7 +82,7 @@ const router = createRouter({
       }
     }
   ],
-  scrollBehavior(to, from, savedPosition) {
+  scrollBehavior(_to, _from, savedPosition) {
     if (savedPosition) {
       return savedPosition
     } else {
@@ -92,7 +92,7 @@ const router = createRouter({
 })
 
 // Update document title on route change
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
   document.title = (to.meta.title as string) || 'Дмитрий Комаров - Портфолио'
   next()
 })
