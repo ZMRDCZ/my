@@ -9,44 +9,17 @@
 
         <!-- Desktop Navigation -->
         <ul class="nav-menu" :class="{ 'active': isMobileMenuOpen }">
-          <li class="nav-item">
-            <NuxtLink to="/" class="nav-link" @click="closeMobileMenu">
-              Главная
-            </NuxtLink>
-          </li>
-          <li class="nav-item">
-            <NuxtLink to="/about" class="nav-link" @click="closeMobileMenu">
-              О себе
-            </NuxtLink>
-          </li>
-          <li class="nav-item">
-            <NuxtLink to="/achievements" class="nav-link" @click="closeMobileMenu">
-              Достижения
-            </NuxtLink>
-          </li>
-          <li class="nav-item">
-            <NuxtLink to="/projects" class="nav-link" @click="closeMobileMenu">
-              Проекты
-            </NuxtLink>
-          </li>
-          <li class="nav-item">
-            <NuxtLink to="/publications" class="nav-link" @click="closeMobileMenu">
-              Публикации
-            </NuxtLink>
-          </li>
-          <li class="nav-item">
-            <NuxtLink to="/initiatives" class="nav-link" @click="closeMobileMenu">
-              Инициативы
-            </NuxtLink>
-          </li>
-          <li class="nav-item">
-            <NuxtLink to="/gallery" class="nav-link" @click="closeMobileMenu">
-              Галерея
-            </NuxtLink>
-          </li>
-          <li class="nav-item">
-            <NuxtLink to="/contacts" class="nav-link" @click="closeMobileMenu">
-              Контакты
+          <li 
+            v-for="item in navigationItems" 
+            :key="item.path" 
+            class="nav-item"
+          >
+            <NuxtLink 
+              :to="item.path" 
+              class="nav-link" 
+              @click="closeMobileMenu"
+            >
+              {{ item.label }}
             </NuxtLink>
           </li>
         </ul>
@@ -56,7 +29,9 @@
           class="mobile-menu-btn"
           @click="toggleMobileMenu"
           :class="{ 'active': isMobileMenuOpen }"
-          aria-label="Открыть меню"
+          :aria-label="isMobileMenuOpen ? 'Закрыть меню' : 'Открыть меню'"
+          :aria-expanded="isMobileMenuOpen"
+          type="button"
         >
           <span></span>
           <span></span>
@@ -66,66 +41,24 @@
     </div>
     
     <!-- Mobile Menu Overlay -->
-    <div 
-      v-if="isMobileMenuOpen" 
-      class="mobile-menu-overlay"
-      @click="closeMobileMenu"
-    ></div>
+    <Transition name="fade">
+      <div 
+        v-if="isMobileMenuOpen" 
+        class="mobile-menu-overlay"
+        @click="closeMobileMenu"
+        aria-hidden="true"
+      ></div>
+    </Transition>
   </header>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { navigationItems } from '~/constants/navigation'
+import { useScroll } from '~/composables/useScroll'
+import { useMobileMenu } from '~/composables/useMobileMenu'
 
-const isScrolled = ref(false)
-const isMobileMenuOpen = ref(false)
-
-const handleScroll = () => {
-  isScrolled.value = window.scrollY > 50
-}
-
-const toggleMobileMenu = () => {
-  isMobileMenuOpen.value = !isMobileMenuOpen.value
-  
-  // Prevent body scroll when menu is open
-  if (isMobileMenuOpen.value) {
-    document.body.style.overflow = 'hidden'
-  } else {
-    document.body.style.overflow = 'auto'
-  }
-}
-
-const closeMobileMenu = () => {
-  isMobileMenuOpen.value = false
-  document.body.style.overflow = 'auto'
-}
-
-// Close menu on escape key
-const handleKeydown = (event: KeyboardEvent) => {
-  if (event.key === 'Escape' && isMobileMenuOpen.value) {
-    closeMobileMenu()
-  }
-}
-
-// Close menu on window resize
-const handleResize = () => {
-  if (window.innerWidth > 640 && isMobileMenuOpen.value) {
-    closeMobileMenu()
-  }
-}
-
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll)
-  window.addEventListener('keydown', handleKeydown)
-  window.addEventListener('resize', handleResize)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll)
-  window.removeEventListener('keydown', handleKeydown)
-  window.removeEventListener('resize', handleResize)
-  document.body.style.overflow = 'auto'
-})
+const { isScrolled } = useScroll(50)
+const { isOpen: isMobileMenuOpen, toggle: toggleMobileMenu, close: closeMobileMenu } = useMobileMenu()
 </script>
 
 <style lang="scss" scoped>
@@ -352,5 +285,16 @@ onUnmounted(() => {
   @include tablet-and-desktop {
     display: none;
   }
+}
+
+// Fade transition for overlay
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style> 

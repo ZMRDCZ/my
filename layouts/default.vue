@@ -9,20 +9,7 @@
 </template>
 
 <script setup lang="ts">
-// Import components
-import AppHeader from '~/components/layout/AppHeader.vue'
-import AppFooter from '~/components/layout/AppFooter.vue'
-
-// Provide page transition animations
-const route = useRoute()
-
-// Add smooth scroll behavior
-onMounted(() => {
-  // Initialize GSAP animations if needed
-  if (process.client) {
-    // Any client-side initialization
-  }
-})
+// No need for explicit imports - Nuxt auto-imports components
 </script>
 
 <style lang="scss" scoped>

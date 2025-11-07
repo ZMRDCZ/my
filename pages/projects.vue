@@ -10,11 +10,13 @@
           </p>
           <div class="project-filters">
             <button 
-              v-for="filter in filters"
+              v-for="filter in projectFilters"
               :key="filter.value"
               @click="activeFilter = filter.value"
               :class="{ 'active': activeFilter === filter.value }"
               class="filter-btn neon-button"
+              type="button"
+              :aria-pressed="activeFilter === filter.value"
             >
               {{ filter.label }}
             </button>
@@ -27,122 +29,102 @@
     <section class="projects-grid-section section">
       <div class="container">
         <div class="projects-grid">
-          <div 
+          <ProjectCard
             v-for="project in filteredProjects"
             :key="project.id"
-            class="project-card card"
+            :project="project"
             @click="openProjectModal(project)"
-          >
-            <div class="project-image">
-              <div class="image-placeholder">
-                <div class="placeholder-icon">{{ project.icon }}</div>
-                <div class="project-category">{{ project.category }}</div>
-              </div>
-              <div class="project-overlay">
-                <div class="overlay-content">
-                  <span class="view-details">Подробнее</span>
-                </div>
-              </div>
-            </div>
-            <div class="project-content">
-              <h3 class="project-title">{{ project.title }}</h3>
-              <p class="project-description">{{ project.shortDescription }}</p>
-              <div class="project-tech">
-                <span 
-                  v-for="tech in project.technologies"
-                  :key="tech"
-                  class="tech-tag"
-                >
-                  {{ tech }}
-                </span>
-              </div>
-              <div class="project-stats">
-                <div class="stat-item" v-if="project.participants">
-                  <span class="stat-icon">👥</span>
-                  <span class="stat-value">{{ project.participants }}+ участников</span>
-                </div>
-                <div class="stat-item" v-if="project.duration">
-                  <span class="stat-icon">⏰</span>
-                  <span class="stat-value">{{ project.duration }}</span>
-                </div>
-                <div class="stat-item" v-if="project.status">
-                  <span class="stat-icon">🚀</span>
-                  <span class="stat-value">{{ project.status }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          />
         </div>
       </div>
     </section>
 
     <!-- Project Modal -->
-    <div v-if="selectedProject" class="project-modal" @click="closeProjectModal">
-      <div class="modal-content card neon-border" @click.stop>
-        <button class="modal-close" @click="closeProjectModal" aria-label="Закрыть">×</button>
-        <div class="modal-header">
-          <div class="modal-icon">{{ selectedProject.icon }}</div>
-          <h2 class="modal-title">{{ selectedProject.title }}</h2>
-          <p class="modal-category">{{ selectedProject.category }}</p>
-        </div>
-        <div class="modal-body">
-          <p class="project-full-description">{{ selectedProject.fullDescription }}</p>
-          
-          <div v-if="selectedProject.achievements" class="project-achievements">
-            <h3>Достижения проекта:</h3>
-            <ul>
-              <li v-for="achievement in selectedProject.achievements" :key="achievement">
-                {{ achievement }}
-              </li>
-            </ul>
+    <Transition name="modal">
+      <div 
+        v-if="selectedProject" 
+        class="project-modal" 
+        @click="closeProjectModal"
+        role="dialog"
+        aria-modal="true"
+        :aria-labelledby="`modal-title-${selectedProject.id}`"
+      >
+        <div class="modal-content card neon-border" @click.stop>
+          <button 
+            class="modal-close" 
+            @click="closeProjectModal" 
+            aria-label="Закрыть модальное окно"
+            type="button"
+          >
+            ×
+          </button>
+          <div class="modal-header">
+            <div class="modal-icon" aria-hidden="true">{{ selectedProject.icon }}</div>
+            <h2 :id="`modal-title-${selectedProject.id}`" class="modal-title">{{ selectedProject.title }}</h2>
+            <p class="modal-category">{{ selectedProject.category }}</p>
           </div>
-          
-          <div v-if="selectedProject.videoReport" class="project-video">
-            <h3>Видеоотчёт:</h3>
-            <div class="video-placeholder">
-              <div class="video-icon">🎥</div>
-              <p>{{ selectedProject.videoReport }}</p>
+          <div class="modal-body">
+            <p class="project-full-description">{{ selectedProject.fullDescription }}</p>
+            
+            <div v-if="selectedProject.achievements" class="project-achievements">
+              <h3>Достижения проекта:</h3>
+              <ul>
+                <li v-for="achievement in selectedProject.achievements" :key="achievement">
+                  {{ achievement }}
+                </li>
+              </ul>
             </div>
-          </div>
-          
-          <div class="project-details">
-            <div class="detail-section">
-              <h4>Технологии:</h4>
-              <div class="tech-list">
-                <span 
-                  v-for="tech in selectedProject.technologies"
-                  :key="tech"
-                  class="tech-tag"
-                >
-                  {{ tech }}
-                </span>
+            
+            <div v-if="selectedProject.videoReport" class="project-video">
+              <h3>Видеоотчёт:</h3>
+              <div class="video-placeholder">
+                <div class="video-icon" aria-hidden="true">🎥</div>
+                <p>{{ selectedProject.videoReport }}</p>
               </div>
             </div>
             
-            <div v-if="selectedProject.links" class="detail-section">
-              <h4>Ссылки:</h4>
-              <div class="project-links">
-                <a 
-                  v-for="link in selectedProject.links"
-                  :key="link.title"
-                  :href="link.url"
-                  target="_blank"
-                  rel="noopener"
-                  class="project-link neon-button"
-                >
-                  {{ link.title }}
-                </a>
+            <div class="project-details">
+              <div class="detail-section">
+                <h4>Технологии:</h4>
+                <div class="tech-list">
+                  <span 
+                    v-for="tech in selectedProject.technologies"
+                    :key="tech"
+                    class="tech-tag"
+                  >
+                    {{ tech }}
+                  </span>
+                </div>
+              </div>
+              
+              <div v-if="selectedProject.links" class="detail-section">
+                <h4>Ссылки:</h4>
+                <div class="project-links">
+                  <a 
+                    v-for="link in selectedProject.links"
+                    :key="link.title"
+                    :href="link.url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="project-link neon-button"
+                  >
+                    {{ link.title }}
+                  </a>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </Transition>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed } from 'vue'
+import type { Project, ProjectType } from '~/types'
+import { projects, projectFilters } from '~/constants/projects'
+import { useModal } from '~/composables/useModal'
 
 // Meta tags
 useSeoMeta({
@@ -153,213 +135,30 @@ useSeoMeta({
 })
 
 // Reactive state
-const activeFilter = ref('all')
-const selectedProject = ref(null)
+const activeFilter = ref<ProjectType>('all')
+const projectsData = ref<Project[]>(projects)
 
-// Filters
-const filters = [
-  { value: 'all', label: 'Все проекты' },
-  { value: 'web', label: 'Веб-разработка' },
-  { value: 'inclusive', label: 'Инклюзивные инициативы' },
-  { value: 'education', label: 'Образование' },
-  { value: 'organization', label: 'Организационные' }
-]
+// Modal management
+const { isOpen: isModalOpen, modalContent, open: openModal, close: closeModal } = useModal()
 
-// Projects data
-const projects = ref([
-  {
-    id: 1,
-    title: 'Студенческий совет факультета РК',
-    shortDescription: 'Создание и развитие студенческого совета факультета ракетно-космической техники',
-    fullDescription: 'Основал и возглавил студенческий совет факультета ракетно-космической техники МГТУ им. Н.Э. Баумана. Совет занимается организацией мероприятий, поддержкой студентов и развитием академической среды.',
-    category: 'Организационный проект',
-    icon: '🚀',
-    technologies: ['Менеджмент', 'Организация', 'Лидерство'],
-    participants: '150',
-    duration: '2023-2024',
-    status: 'Активный',
-    type: 'organization',
-    achievements: [
-      'Создание структуры совета',
-      'Организация 10+ мероприятий',
-      'Участие 150+ студентов',
-      'Улучшение студенческой жизни'
-    ]
-  },
-  {
-    id: 2,
-    title: 'Проект "Наставничество"',
-    shortDescription: 'Программа наставничества для студентов младших курсов',
-    fullDescription: 'Разработал и запустил комплексную программу наставничества, направленную на адаптацию и поддержку студентов младших курсов. Программа включает академическую поддержку, профориентацию и личностное развитие.',
-    category: 'Образовательная инициатива',
-    icon: '👥',
-    technologies: ['Психология', 'Педагогика', 'Менеджмент'],
-    participants: '80',
-    duration: '2023-настоящее время',
-    status: 'Активный',
-    type: 'education',
-    achievements: [
-      'Создание методологии наставничества',
-      'Обучение 15 наставников',
-      'Поддержка 80+ студентов',
-      'Повышение успеваемости на 25%'
-    ]
-  },
-  {
-    id: 3,
-    title: 'Конкурс "Твой ход"',
-    shortDescription: 'Участие в федеральном конкурсе молодежных проектов',
-    fullDescription: 'Принял участие в федеральном конкурсе "Твой ход" с проектом по развитию инклюзивного образования. Проект был направлен на создание доступной образовательной среды для студентов с ОВЗ.',
-    category: 'Конкурсный проект',
-    icon: '🎯',
-    technologies: ['Инновации', 'Социальные технологии'],
-    duration: '2023',
-    status: 'Завершён',
-    type: 'inclusive',
-    achievements: [
-      'Разработка инновационного решения',
-      'Участие в федеральном конкурсе',
-      'Презентация проекта экспертам',
-      'Получение обратной связи'
-    ]
-  },
-  {
-    id: 4,
-    title: 'Грант Росмолодёжи "Открытые Перспективы"',
-    shortDescription: 'Реализация гранта на развитие инклюзивных образовательных инициатив',
-    fullDescription: 'Успешно получил и реализовал грант Росмолодёжи "Открытые Перспективы" на сумму 300,000 рублей. Проект был направлен на создание инклюзивной образовательной среды и поддержку людей с нарушениями слуха.',
-    category: 'Грантовый проект',
-    icon: '💰',
-    technologies: ['Проектный менеджмент', 'Инклюзивные технологии'],
-    participants: '200',
-    duration: '2024',
-    status: 'Завершён успешно',
-    type: 'inclusive',
-    achievements: [
-      'Получение гранта 300,000 рублей',
-      'Охват 200+ участников',
-      'Создание методических материалов',
-      'Успешная отчётность'
-    ],
-    videoReport: 'Интерактивный видеоотчёт о реализации проекта будет доступен после предоставления материалов заказчиком'
-  },
-  {
-    id: 5,
-    title: 'АНО "Открытые Перспективы"',
-    shortDescription: 'Деятельность в автономной некоммерческой организации',
-    fullDescription: 'Активная работа в АНО "Открытые Перспективы", направленной на развитие инклюзивного образования и поддержку людей с ограниченными возможностями здоровья. Участие в стратегическом планировании и реализации проектов.',
-    category: 'Общественная деятельность',
-    icon: '🌟',
-    technologies: ['НКО', 'Социальные проекты', 'Инклюзивность'],
-    participants: '500',
-    duration: '2022-настоящее время',
-    status: 'Активный',
-    type: 'inclusive',
-    achievements: [
-      'Участие в управлении НКО',
-      'Реализация 5+ проектов',
-      'Охват 500+ бенефициаров',
-      'Развитие партнёрской сети'
-    ]
-  },
-  {
-    id: 6,
-    title: 'Адаптация лекций на РЖЯ',
-    shortDescription: 'Адаптация технических лекций на русский жестовый язык',
-    fullDescription: 'Разработка методологии и практическая адаптация технических лекций на русский жестовый язык. Создание доступного образовательного контента для студентов с нарушениями слуха.',
-    category: 'Инклюзивный проект',
-    icon: '🤟',
-    technologies: ['РЖЯ', 'Педагогика', 'Инклюзивные технологии'],
-    participants: '50',
-    duration: '2023-настоящее время',
-    status: 'Активный',
-    type: 'inclusive',
-    achievements: [
-      'Адаптация 20+ лекций',
-      'Обучение 50+ студентов',
-      'Создание методических рекомендаций',
-      'Подготовка переводчиков'
-    ]
-  },
-  {
-    id: 7,
-    title: 'Лендинг АНО "Открытые Перспективы"',
-    shortDescription: 'Разработка официального сайта организации',
-    fullDescription: 'Создание современного адаптивного сайта для АНО "Открытые Перспективы" с акцентом на доступность и инклюзивность. Сайт включает информацию о проектах, возможности для участия и обратную связь.',
-    category: 'Веб-разработка',
-    icon: '🌐',
-    technologies: ['Vue.js', 'Nuxt.js', 'SCSS', 'Доступность'],
-    duration: '2024',
-    status: 'Завершён',
-    type: 'web',
-    achievements: [
-      'Создание адаптивного дизайна',
-      'Обеспечение веб-доступности',
-      'SEO-оптимизация',
-      'Интеграция с CMS'
-    ],
-    links: [
-      { title: 'Посетить сайт', url: '#' }
-    ]
-  },
-  {
-    id: 8,
-    title: 'Сайт Технекона',
-    shortDescription: 'Разработка сайта для технической конференции',
-    fullDescription: 'Создание интерактивного сайта для технической конференции "Технекон" с регистрацией участников, программой мероприятий и онлайн-трансляциями.',
-    category: 'Веб-разработка',
-    icon: '💻',
-    technologies: ['React', 'Node.js', 'PostgreSQL', 'WebRTC'],
-    participants: '300',
-    duration: '2023',
-    status: 'Завершён',
-    type: 'web',
-    achievements: [
-      'Регистрация 300+ участников',
-      'Онлайн-трансляции событий',
-      'Система управления контентом',
-      'Мобильная оптимизация'
-    ],
-    links: [
-      { title: 'Посетить сайт', url: '#' }
-    ]
-  }
-])
+const selectedProject = computed(() => modalContent.value as Project | null)
 
 // Computed properties
 const filteredProjects = computed(() => {
   if (activeFilter.value === 'all') {
-    return projects.value
+    return projectsData.value
   }
-  return projects.value.filter(project => project.type === activeFilter.value)
+  return projectsData.value.filter(project => project.type === activeFilter.value)
 })
 
 // Methods
-const openProjectModal = (project: any) => {
-  selectedProject.value = project
-  document.body.style.overflow = 'hidden'
+const openProjectModal = (project: Project) => {
+  openModal(project)
 }
 
 const closeProjectModal = () => {
-  selectedProject.value = null
-  document.body.style.overflow = 'auto'
+  closeModal()
 }
-
-// Close modal on escape key
-const handleKeydown = (event: KeyboardEvent) => {
-  if (event.key === 'Escape' && selectedProject.value) {
-    closeProjectModal()
-  }
-}
-
-onMounted(() => {
-  window.addEventListener('keydown', handleKeydown)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('keydown', handleKeydown)
-  document.body.style.overflow = 'auto'
-})
 </script>
 
 <style lang="scss" scoped>
@@ -477,276 +276,6 @@ onUnmounted(() => {
   }
 }
 
-.project-card {
-  cursor: pointer;
-  overflow: hidden;
-  transition: $transition-normal;
-  min-height: 400px;
-  display: flex;
-  flex-direction: column;
-  
-  @include mobile {
-    min-height: 350px;
-  }
-  
-  @include xs {
-    min-height: 300px;
-  }
-  
-  &:hover {
-    transform: translateY(-10px);
-    
-    .project-overlay {
-      opacity: 1;
-    }
-    
-    .project-image .placeholder-icon {
-      transform: scale(1.1);
-    }
-  }
-  
-  // Touch device optimizations
-  @include touch-device {
-    &:hover {
-      transform: none;
-    }
-    
-    &:active {
-      transform: translateY(-5px);
-    }
-  }
-}
-
-.project-image {
-  position: relative;
-  height: 200px;
-  overflow: hidden;
-  
-  @include mobile {
-    height: 180px;
-  }
-  
-  @include xs {
-    height: 150px;
-  }
-  
-  .image-placeholder {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, $color-gray-800, $color-gray-700);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    
-    .placeholder-icon {
-      font-size: 4rem;
-      margin-bottom: $spacing-4;
-      transition: $transition-normal;
-      
-      @include mobile {
-        font-size: 3rem;
-        margin-bottom: $spacing-3;
-      }
-      
-      @include xs {
-        font-size: 2.5rem;
-        margin-bottom: $spacing-2;
-      }
-    }
-    
-    .project-category {
-      position: absolute;
-      top: $spacing-4;
-      right: $spacing-4;
-      background: linear-gradient(45deg, $color-neon-pink, $color-neon-cyan);
-      color: $color-white;
-      padding: $spacing-1 $spacing-3;
-      border-radius: $radius-full;
-      font-size: $text-xs;
-      font-weight: 600;
-      
-      @include mobile {
-        top: $spacing-3;
-        right: $spacing-3;
-        padding: $spacing-1 $spacing-2;
-        font-size: 0.7rem;
-      }
-      
-      @include xs {
-        top: $spacing-2;
-        right: $spacing-2;
-        padding: 0.25rem $spacing-2;
-        font-size: 0.65rem;
-      }
-    }
-  }
-}
-
-.project-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: $transition-normal;
-  
-  .overlay-content {
-    text-align: center;
-    
-    .view-details {
-      color: $color-neon-cyan;
-      font-weight: 600;
-      font-size: $text-lg;
-      @include neon-text($color-neon-cyan);
-      
-      @include mobile {
-        font-size: $text-base;
-      }
-      
-      @include xs {
-        font-size: $text-sm;
-      }
-    }
-  }
-}
-
-.project-content {
-  padding: $spacing-6;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  
-  @include mobile {
-    padding: $spacing-4;
-  }
-  
-  @include xs {
-    padding: $spacing-3;
-  }
-}
-
-.project-title {
-  font-size: $text-xl;
-  color: $color-white;
-  margin-bottom: $spacing-4;
-  line-height: 1.3;
-  
-  @include mobile {
-    font-size: $text-lg;
-    margin-bottom: $spacing-3;
-  }
-  
-  @include xs {
-    font-size: $text-base;
-    margin-bottom: $spacing-2;
-  }
-}
-
-.project-description {
-  color: $color-gray-300;
-  line-height: 1.6;
-  margin-bottom: $spacing-4;
-  flex: 1;
-  
-  @include mobile {
-    font-size: $text-sm;
-    margin-bottom: $spacing-3;
-  }
-  
-  @include xs {
-    font-size: $text-xs;
-    margin-bottom: $spacing-2;
-  }
-}
-
-.project-tech {
-  display: flex;
-  flex-wrap: wrap;
-  gap: $spacing-2;
-  margin-bottom: $spacing-4;
-  
-  @include mobile {
-    gap: $spacing-1;
-    margin-bottom: $spacing-3;
-  }
-  
-  @include xs {
-    gap: 0.25rem;
-    margin-bottom: $spacing-2;
-  }
-}
-
-.tech-tag {
-  background: rgba(255, 255, 255, 0.1);
-  color: $color-neon-cyan;
-  padding: $spacing-1 $spacing-3;
-  border-radius: $radius-full;
-  font-size: $text-xs;
-  font-weight: 500;
-  
-  @include mobile {
-    padding: 0.25rem $spacing-2;
-    font-size: 0.7rem;
-  }
-  
-  @include xs {
-    padding: 0.2rem $spacing-2;
-    font-size: 0.65rem;
-  }
-}
-
-.project-stats {
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-2;
-  margin-top: auto;
-  
-  @include mobile {
-    gap: $spacing-1;
-  }
-  
-  @include xs {
-    gap: 0.25rem;
-  }
-  
-  .stat-item {
-    display: flex;
-    align-items: center;
-    gap: $spacing-2;
-    font-size: $text-sm;
-    color: $color-gray-400;
-    
-    @include mobile {
-      font-size: $text-xs;
-      gap: $spacing-1;
-    }
-    
-    @include xs {
-      font-size: 0.7rem;
-      gap: 0.5rem;
-    }
-    
-    .stat-icon {
-      font-size: $text-base;
-      
-      @include mobile {
-        font-size: $text-sm;
-      }
-      
-      @include xs {
-        font-size: $text-xs;
-      }
-    }
-  }
-}
-
 // Modal styles
 .project-modal {
   position: fixed;
@@ -793,6 +322,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: $transition-normal;
   
   @include mobile {
     top: $spacing-3;
@@ -808,6 +338,12 @@ onUnmounted(() => {
   
   &:hover {
     color: $color-neon-pink;
+    transform: scale(1.1);
+  }
+  
+  &:focus {
+    outline: 2px solid $color-neon-cyan;
+    outline-offset: 2px;
   }
 }
 
@@ -1070,4 +606,26 @@ onUnmounted(() => {
     }
   }
 }
-</style> 
+
+// Modal transitions
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-active .modal-content,
+.modal-leave-active .modal-content {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.modal-enter-from .modal-content,
+.modal-leave-to .modal-content {
+  transform: scale(0.9);
+  opacity: 0;
+}
+</style>

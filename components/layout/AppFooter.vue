@@ -6,13 +6,13 @@
         <div class="footer-section">
           <h3 class="footer-title">Контакты</h3>
           <div class="contact-info">
-            <a href="mailto:dmitry@example.com" class="contact-link">
-              <i class="icon-email">✉</i>
-              <span class="contact-text">dmitry@example.com</span>
+            <a :href="`mailto:${contactInfo.email}`" class="contact-link" aria-label="Написать на email">
+              <i class="icon-email" aria-hidden="true">✉</i>
+              <span class="contact-text">{{ contactInfo.email }}</span>
             </a>
-            <a href="tel:+79999999999" class="contact-link">
-              <i class="icon-phone">📞</i>
-              <span class="contact-text">+7 (999) 999-99-99</span>
+            <a :href="`tel:${contactInfo.phone.replace(/\s/g, '')}`" class="contact-link" aria-label="Позвонить">
+              <i class="icon-phone" aria-hidden="true">📞</i>
+              <span class="contact-text">{{ contactInfo.phone }}</span>
             </a>
           </div>
         </div>
@@ -21,17 +21,17 @@
         <div class="footer-section">
           <h3 class="footer-title">Социальные сети</h3>
           <div class="social-links">
-            <a href="#" class="social-link telegram" target="_blank" rel="noopener">
-              <span class="social-icon">📱</span>
-              <span class="social-text">Telegram</span>
-            </a>
-            <a href="#" class="social-link vk" target="_blank" rel="noopener">
-              <span class="social-icon">🔗</span>
-              <span class="social-text">VKontakte</span>
-            </a>
-            <a href="#" class="social-link linkedin" target="_blank" rel="noopener">
-              <span class="social-icon">💼</span>
-              <span class="social-text">LinkedIn</span>
+            <a 
+              v-for="social in socialLinks"
+              :key="social.name"
+              :href="social.url" 
+              :class="['social-link', social.name.toLowerCase()]"
+              target="_blank" 
+              rel="noopener noreferrer"
+              :aria-label="social.ariaLabel"
+            >
+              <span class="social-icon" aria-hidden="true">{{ social.icon }}</span>
+              <span class="social-text">{{ social.name }}</span>
             </a>
           </div>
         </div>
@@ -62,6 +62,8 @@
 </template>
 
 <script setup lang="ts">
+import { contactInfo, socialLinks } from '~/constants/contacts'
+
 const currentYear = new Date().getFullYear()
 </script>
 

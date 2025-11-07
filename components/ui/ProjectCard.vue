@@ -42,17 +42,7 @@
 </template>
 
 <script setup lang="ts">
-interface Project {
-  id: number
-  title: string
-  shortDescription: string
-  category: string
-  icon: string
-  technologies: string[]
-  participants?: string
-  duration?: string
-  status?: string
-}
+import type { Project } from '~/types'
 
 interface Props {
   project: Project
