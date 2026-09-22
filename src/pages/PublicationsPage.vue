@@ -1,48 +1,92 @@
 <template>
   <div class="publications-page">
-    <section class="page-header section">
+    <section class="page-header">
       <div class="container">
-        <h1 class="page-title text-gradient">Публикации</h1>
-        <p class="page-description">
-          Научные статьи, исследования и публикации в профильных изданиях
-        </p>
+        <h1 class="page-title">{{ t('publications.title') }}</h1>
+        <p class="page-subtitle">{{ t('publications.subtitle') }}</p>
+
+        <div class="profiles">
+          <a
+            v-for="item in publicationProfiles"
+            :key="item.name"
+            :href="item.url"
+            class="profile-chip"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="profile-chip-name">{{ item.name }}</span>
+            <span class="profile-chip-handle">{{ item.handle }}</span>
+          </a>
+        </div>
+
+        <p class="original-note">{{ t('publications.originalNote') }}</p>
       </div>
     </section>
 
-    <section class="publications-section section">
+    <section class="section section--tight">
       <div class="container">
-        <div class="placeholder-card card">
-          <div class="placeholder-icon">📚</div>
-          <h2 class="placeholder-title">Раздел в разработке</h2>
-          <p class="placeholder-text">
-            Информация о публикациях будет добавлена после предоставления 
-            материалов заказчиком. Здесь будут представлены научные статьи, 
-            исследования и публикации в профильных изданиях.
-          </p>
+        <!-- Фильтр по годам -->
+        <div class="filters" role="group" :aria-label="t('publications.filterYears')">
+          <button
+            type="button"
+            class="filter"
+            :class="{ active: activeYear === 'all' }"
+            @click="activeYear = 'all'"
+          >
+            {{ t('common.allYears') }}
+          </button>
+          <button
+            v-for="year in publicationYears"
+            :key="year"
+            type="button"
+            class="filter"
+            :class="{ active: activeYear === year }"
+            @click="activeYear = year"
+          >
+            {{ year }}
+          </button>
         </div>
 
-        <div class="info-grid">
-          <div class="info-card card">
-            <h3 class="info-title">Что будет включено:</h3>
-            <ul class="info-list">
-              <li>Научные статьи</li>
-              <li>Конференционные доклады</li>
-              <li>Тезисы исследований</li>
-              <li>Публикации в журналах</li>
-              <li>Материалы симпозиумов</li>
-            </ul>
-          </div>
+        <!-- Список по годам -->
+        <div v-for="group in groupedPublications" :key="group.year" class="year-group">
+          <h2 class="year-title">
+            {{ group.year }}
+            <span class="year-count">{{ countLabel(group.items.length) }}</span>
+          </h2>
 
-          <div class="info-card card">
-            <h3 class="info-title">Формат представления:</h3>
-            <ul class="info-list">
-              <li>Название публикации</li>
-              <li>Авторы и соавторы</li>
-              <li>Издание и год</li>
-              <li>Аннотация</li>
-              <li>Ссылки на полный текст</li>
-            </ul>
-          </div>
+          <ol class="pub-list">
+            <li v-for="item in group.items" :key="item.id" class="pub-item">
+              <article class="pub-card">
+                <header class="pub-head">
+                  <h3 class="pub-title">{{ item.title }}</h3>
+                  <span v-if="item.pending" class="pub-badge">{{ t('publications.pending') }}</span>
+                </header>
+
+                <p class="pub-authors">{{ item.authors }}</p>
+
+                <p class="pub-source">
+                  {{ item.source }}<template v-if="item.city">. {{ item.city }}</template
+                  ><template v-if="item.pages">. {{ item.pages }}</template>
+                </p>
+
+                <p v-if="item.note" class="pub-note">{{ item.note }}</p>
+
+                <div v-if="item.topics?.length" class="tag-cloud pub-topics">
+                  <span v-for="topic in item.topics" :key="topic" class="tag">{{ topic }}</span>
+                </div>
+
+                <a
+                  v-if="item.link"
+                  :href="item.link"
+                  class="pub-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {{ t('publications.read') }}
+                </a>
+              </article>
+            </li>
+          </ol>
         </div>
       </div>
     </section>
@@ -50,146 +94,229 @@
 </template>
 
 <script setup lang="ts">
-// No additional logic needed
+import { computed, ref } from 'vue'
+import { getPublications, publicationProfiles, publicationYears } from '@/constants/publications'
+import { useI18n } from '@/i18n'
+
+const { locale, t, worksCount } = useI18n()
+
+const publications = computed(() => getPublications(locale.value))
+const activeYear = ref<string>('all')
+
+const groupedPublications = computed(() => {
+  const years = activeYear.value === 'all' ? publicationYears : [activeYear.value]
+
+  return years
+    .map((year) => ({
+      year,
+      items: publications.value.filter((item) => item.year === year)
+    }))
+    .filter((group) => group.items.length > 0)
+})
+
+const countLabel = (count: number): string => worksCount(count)
 </script>
 
 <style lang="scss" scoped>
-.page-header {
-  text-align: center;
-  padding-top: 120px;
-  
-  @include mobile {
-    padding-top: 100px;
+.section--tight {
+  padding: $spacing-6 0 $spacing-16;
+}
+
+.profiles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: $spacing-3;
+  margin-top: $spacing-6;
+}
+
+.profile-chip {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: $spacing-3 $spacing-4;
+  background: $paper-raised;
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  text-decoration: none;
+  text-align: left;
+  min-height: 44px;
+
+  &:hover {
+    border-color: rgba($accent, 0.5);
   }
 }
 
-.page-title {
-  font-size: $text-5xl;
-  margin-bottom: $spacing-4;
-  
+.profile-chip-name {
+  font-weight: 600;
+  font-size: $text-sm;
+  color: $ink;
+}
+
+.original-note {
+  margin-top: $spacing-4;
+  color: $color-text-muted;
+  font-size: $text-sm;
+}
+
+.profile-chip-handle {
+  font-size: $text-xs;
+  color: $color-text-muted;
+}
+
+// --- Фильтр ---
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-2;
+  margin-bottom: $spacing-10;
+
   @include mobile {
-    font-size: $text-4xl;
-  }
-  
-  @include xs {
-    font-size: $text-3xl;
+    margin-bottom: $spacing-6;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: $spacing-2;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 }
 
-.page-description {
-  font-size: $text-xl;
+.filter {
+  padding: $spacing-2 $spacing-4;
+  min-height: 40px;
+  background: transparent;
+  border: 1px solid $line;
+  border-radius: $radius-full;
   color: $color-text-secondary;
-  max-width: 600px;
-  margin: 0 auto;
-  
-  @include mobile {
-    font-size: $text-lg;
+  font-size: $text-sm;
+  font-weight: 500;
+  white-space: nowrap;
+
+  &:hover {
+    border-color: rgba($accent, 0.5);
+    color: $ink;
   }
-  
-  @include xs {
-    font-size: $text-base;
+
+  &.active {
+    background: $ink;
+    border-color: $ink;
+    color: $paper;
   }
 }
 
-.placeholder-card {
-  max-width: 800px;
-  margin: 0 auto $spacing-12;
-  text-align: center;
-  padding: $spacing-12;
-  
-  @include mobile {
-    padding: $spacing-8;
-    margin-bottom: $spacing-8;
-  }
-  
-  @include xs {
-    padding: $spacing-6;
+// --- Список ---
+.year-group {
+  margin-bottom: $spacing-12;
+
+  &:last-child {
+    margin-bottom: 0;
   }
 }
 
-.placeholder-icon {
-  font-size: 5rem;
+.year-title {
+  display: flex;
+  align-items: baseline;
+  gap: $spacing-3;
+  font-size: $text-2xl;
+  padding-bottom: $spacing-3;
+  border-bottom: 2px solid $ink;
   margin-bottom: $spacing-6;
-  
+}
+
+.year-count {
+  font-family: $font-secondary;
+  font-size: $text-sm;
+  font-weight: 400;
+  color: $color-text-muted;
+}
+
+.pub-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+  counter-reset: pub;
+}
+
+.pub-card {
+  padding: $spacing-5;
+  background: $paper-raised;
+  border: 1px solid $line;
+  border-radius: $radius-lg;
+  transition: border-color $transition-normal, box-shadow $transition-normal;
+
+  &:hover {
+    border-color: rgba($accent, 0.4);
+    box-shadow: $shadow-md;
+  }
+
   @include mobile {
-    font-size: 4rem;
-    margin-bottom: $spacing-4;
+    padding: $spacing-4;
   }
 }
 
-.placeholder-title {
-  font-size: $text-3xl;
-  color: $color-accent;
-  margin-bottom: $spacing-4;
-  
-  @include mobile {
-    font-size: $text-2xl;
-  }
-  
-  @include xs {
-    font-size: $text-xl;
-  }
+.pub-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: $spacing-3;
+  margin-bottom: $spacing-2;
 }
 
-.placeholder-text {
+.pub-title {
   font-size: $text-lg;
-  color: $color-text-secondary;
-  line-height: 1.7;
-  
+  line-height: 1.35;
+  flex: 1;
+  min-width: 240px;
+
   @include mobile {
     font-size: $text-base;
+    min-width: 0;
   }
 }
 
-.info-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: $spacing-6;
-  max-width: 1000px;
-  margin: 0 auto;
-  
-  @include mobile-and-tablet {
-    grid-template-columns: 1fr;
-    gap: $spacing-4;
-  }
+.pub-badge {
+  flex-shrink: 0;
+  padding: 2px $spacing-2;
+  background: $second-soft;
+  color: $second;
+  border-radius: $radius-full;
+  font-size: $text-xs;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
-.info-card {
-  padding: $spacing-8;
-  
-  @include mobile {
-    padding: $spacing-6;
-  }
+.pub-authors {
+  color: $accent-ink;
+  font-weight: 500;
+  font-size: $text-sm;
+  margin-bottom: $spacing-2;
 }
 
-.info-title {
-  font-size: $text-xl;
-  color: $color-highlight;
-  margin-bottom: $spacing-4;
-  
-  @include mobile {
-    font-size: $text-lg;
-  }
+.pub-source {
+  color: $color-text-secondary;
+  font-size: $text-sm;
 }
 
-.info-list {
-  list-style: none;
-  
-  li {
-    color: $color-text-secondary;
-    padding: $spacing-2 0;
-    border-bottom: 1px solid rgba($color-accent, 0.1);
-    
-    &:last-child {
-      border-bottom: none;
-    }
-    
-    &::before {
-      content: '→';
-      color: $color-accent;
-      margin-right: $spacing-2;
-    }
-  }
+.pub-note {
+  margin-top: $spacing-2;
+  color: $color-text-muted;
+  font-size: $text-sm;
+  font-style: italic;
+}
+
+.pub-topics {
+  margin-top: $spacing-3;
+}
+
+.pub-link {
+  display: inline-block;
+  margin-top: $spacing-3;
+  font-size: $text-sm;
+  font-weight: 600;
+  text-decoration: none;
 }
 </style>
-

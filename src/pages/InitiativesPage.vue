@@ -1,296 +1,213 @@
 <template>
   <div class="initiatives-page">
-    <section class="page-header section">
+    <section class="page-header">
       <div class="container">
-        <h1 class="page-title text-gradient">Инклюзивные инициативы</h1>
-        <p class="page-description">
-          Мероприятия и программы для развития инклюзивного образования
-        </p>
+        <h1 class="page-title">{{ t('initiatives.title') }}</h1>
+        <p class="page-subtitle">{{ initiativesIntro }}</p>
       </div>
     </section>
 
-    <section class="initiatives-section section">
+    <section class="section section--tight">
       <div class="container">
-        <div class="initiatives-grid">
-          <div class="initiative-card card">
-            <div class="initiative-icon">🤟</div>
-            <h3 class="initiative-title">Адаптация лекций на РЖЯ</h3>
-            <p class="initiative-description">
-              Разработка методологии и практическая адаптация технических лекций 
-              на русский жестовый язык. Создание доступного образовательного 
-              контента для студентов с нарушениями слуха.
-            </p>
-            <div class="initiative-stats">
-              <span class="stat">20+ лекций</span>
-              <span class="stat">50+ студентов</span>
-            </div>
-          </div>
+        <div class="init-grid">
+          <article v-for="item in initiatives" :key="item.id" class="init-card">
+            <PhotoStrip v-if="item.images?.length" :images="item.images" :alt="item.title" />
 
-          <div class="initiative-card card">
-            <div class="initiative-icon">💰</div>
-            <h3 class="initiative-title">Грант "Открытые Перспективы"</h3>
-            <p class="initiative-description">
-              Реализация гранта Росмолодёжи на сумму 300,000 рублей. 
-              Создание инклюзивной образовательной среды и поддержка людей 
-              с нарушениями слуха.
-            </p>
-            <div class="initiative-stats">
-              <span class="stat">300,000₽</span>
-              <span class="stat">200+ участников</span>
-            </div>
-          </div>
+            <div class="init-row">
+              <span class="init-icon" aria-hidden="true">
+                <AppIcon :name="item.icon" />
+              </span>
 
-          <div class="initiative-card card">
-            <div class="initiative-icon">🌟</div>
-            <h3 class="initiative-title">АНО "Открытые Перспективы"</h3>
-            <p class="initiative-description">
-              Активная работа в автономной некоммерческой организации, 
-              направленной на развитие инклюзивного образования и поддержку 
-              людей с ограниченными возможностями здоровья.
-            </p>
-            <div class="initiative-stats">
-              <span class="stat">5+ проектов</span>
-              <span class="stat">500+ бенефициаров</span>
-            </div>
-          </div>
+              <div class="init-body">
+                <div v-if="item.period" class="init-period">{{ item.period }}</div>
+                <h2 class="init-title">{{ item.title }}</h2>
+                <p v-if="item.role" class="init-role">{{ item.role }}</p>
+                <p class="init-description">{{ item.description }}</p>
 
-          <div class="initiative-card card">
-            <div class="initiative-icon">👥</div>
-            <h3 class="initiative-title">Программа наставничества</h3>
-            <p class="initiative-description">
-              Комплексная программа наставничества для студентов младших курсов. 
-              Академическая поддержка, профориентация и личностное развитие.
-            </p>
-            <div class="initiative-stats">
-              <span class="stat">15 наставников</span>
-              <span class="stat">80+ студентов</span>
+                <div v-if="item.facts?.length" class="init-facts">
+                  <span v-for="fact in item.facts" :key="fact" class="init-fact">{{ fact }}</span>
+                </div>
+              </div>
             </div>
-          </div>
-
-          <div class="initiative-card card">
-            <div class="initiative-icon">🎯</div>
-            <h3 class="initiative-title">Конкурс "Твой ход"</h3>
-            <p class="initiative-description">
-              Участие в федеральном конкурсе "Твой ход" с проектом по развитию 
-              инклюзивного образования. Создание доступной образовательной среды 
-              для студентов с ОВЗ.
-            </p>
-            <div class="initiative-stats">
-              <span class="stat">Федеральный уровень</span>
-              <span class="stat">2023</span>
-            </div>
-          </div>
-
-          <div class="initiative-card card">
-            <div class="initiative-icon">🚀</div>
-            <h3 class="initiative-title">Студенческий совет</h3>
-            <p class="initiative-description">
-              Основание и руководство студенческим советом факультета 
-              ракетно-космической техники. Организация мероприятий и поддержка 
-              студентов.
-            </p>
-            <div class="initiative-stats">
-              <span class="stat">10+ мероприятий</span>
-              <span class="stat">150+ студентов</span>
-            </div>
-          </div>
+          </article>
         </div>
       </div>
     </section>
 
-    <section class="impact-section section">
+    <section class="section section--sunken">
       <div class="container">
-        <h2 class="section-title text-center">Влияние и результаты</h2>
-        <div class="impact-grid">
-          <div class="impact-card card">
-            <div class="impact-number text-gradient-gold">500+</div>
-            <p class="impact-label">Людей охвачено программами</p>
-          </div>
-          <div class="impact-card card">
-            <div class="impact-number text-gradient-gold">300K</div>
-            <p class="impact-label">Привлечено на проекты</p>
-          </div>
-          <div class="impact-card card">
-            <div class="impact-number text-gradient-gold">15+</div>
-            <p class="impact-label">Реализованных инициатив</p>
-          </div>
-        </div>
+        <h2 class="research-title">{{ initiativesResearch.title }}</h2>
+        <p class="research-note">{{ initiativesResearch.description }}</p>
+
+        <ul class="research-list">
+          <li v-for="item in initiativesResearch.items" :key="item">{{ item }}</li>
+        </ul>
+
+        <router-link to="/publications" class="research-link">{{ t('initiatives.allPublications') }}</router-link>
       </div>
     </section>
   </div>
 </template>
 
 <script setup lang="ts">
-// No additional logic needed
+import { computed } from 'vue'
+import AppIcon from '@/components/ui/AppIcon.vue'
+import PhotoStrip from '@/components/ui/PhotoStrip.vue'
+import {
+  getInitiatives,
+  getInitiativesIntro,
+  getInitiativesResearch
+} from '@/constants/initiatives'
+import { useI18n } from '@/i18n'
+
+const { locale, t } = useI18n()
+
+const initiativesIntro = computed(() => getInitiativesIntro(locale.value))
+const initiatives = computed(() => getInitiatives(locale.value))
+const initiativesResearch = computed(() => getInitiativesResearch(locale.value))
 </script>
 
 <style lang="scss" scoped>
-.page-header {
-  text-align: center;
-  padding-top: 120px;
-  
+.section--tight {
+  padding: $spacing-6 0 $spacing-12;
+}
+
+.section--sunken {
+  background: $paper-sunken;
+  border-top: 1px solid $line;
+}
+
+.init-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: $spacing-4;
+
   @include mobile {
-    padding-top: 100px;
+    grid-template-columns: 1fr;
   }
 }
 
-.page-title {
-  font-size: $text-5xl;
-  margin-bottom: $spacing-4;
-  
-  @include mobile {
-    font-size: $text-4xl;
-  }
-  
-  @include xs {
-    font-size: $text-3xl;
+.init-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: $paper-raised;
+  border: 1px solid $line;
+  border-radius: $radius-lg;
+  transition: border-color $transition-normal, box-shadow $transition-normal;
+
+  &:hover {
+    border-color: rgba($accent, 0.4);
+    box-shadow: $shadow-md;
   }
 }
 
-.page-description {
-  font-size: $text-xl;
-  color: $color-text-secondary;
-  max-width: 600px;
-  margin: 0 auto;
-  
+.init-row {
+  display: flex;
+  gap: $spacing-4;
+  padding: $spacing-5;
+
   @include mobile {
-    font-size: $text-lg;
+    padding: $spacing-4;
+    gap: $spacing-3;
   }
-  
-  @include xs {
+}
+
+.init-icon {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  color: $accent-ink;
+  background: $paper-sunken;
+  border-radius: $radius-md;
+}
+
+.init-body {
+  min-width: 0;
+}
+
+.init-period {
+  font-size: $text-xs;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: $color-text-muted;
+  margin-bottom: $spacing-1;
+}
+
+.init-title {
+  font-size: $text-lg;
+  line-height: 1.3;
+  margin-bottom: $spacing-2;
+
+  @include mobile {
     font-size: $text-base;
   }
 }
 
-.initiatives-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: $spacing-6;
-  
-  @include mobile {
-    grid-template-columns: 1fr;
-    gap: $spacing-4;
-  }
+.init-role {
+  color: $accent-ink;
+  font-size: $text-sm;
+  font-weight: 600;
+  margin-bottom: $spacing-2;
 }
 
-.initiative-card {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  
-  @include mobile {
-    padding: $spacing-5;
-  }
-}
-
-.initiative-icon {
-  font-size: 3rem;
-  margin-bottom: $spacing-4;
-  text-align: center;
-  
-  @include mobile {
-    font-size: 2.5rem;
-    margin-bottom: $spacing-3;
-  }
-}
-
-.initiative-title {
-  font-size: $text-xl;
-  color: $color-accent;
-  margin-bottom: $spacing-3;
-  text-align: center;
-  
-  @include mobile {
-    font-size: $text-lg;
-  }
-}
-
-.initiative-description {
+.init-description {
   color: $color-text-secondary;
-  line-height: 1.6;
-  margin-bottom: $spacing-4;
-  flex: 1;
-  
-  @include mobile {
-    font-size: $text-sm;
-  }
+  font-size: $text-sm;
 }
 
-.initiative-stats {
+.init-facts {
   display: flex;
-  gap: $spacing-3;
-  justify-content: center;
   flex-wrap: wrap;
-  padding-top: $spacing-3;
-  border-top: 1px solid rgba($color-accent, 0.2);
+  gap: $spacing-2;
+  margin-top: $spacing-3;
 }
 
-.stat {
-  padding: $spacing-2 $spacing-3;
-  background: rgba($color-highlight, 0.2);
-  border: 1px solid rgba($color-highlight, 0.3);
-  border-radius: $radius-sm;
-  font-size: $text-xs;
-  color: $color-highlight;
+.init-fact {
+  padding: 2px $spacing-3;
+  background: $accent-soft;
+  color: $accent-ink;
+  border-radius: $radius-full;
+  font-size: $text-sm;
   font-weight: 600;
 }
 
-.section-title {
-  font-size: $text-4xl;
-  margin-bottom: $spacing-12;
-  
-  @include mobile {
-    font-size: $text-3xl;
-    margin-bottom: $spacing-8;
-  }
-  
-  @include xs {
-    font-size: $text-2xl;
-    margin-bottom: $spacing-6;
-  }
-}
-
-.impact-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: $spacing-6;
-  max-width: 1000px;
-  margin: 0 auto;
-  
-  @include mobile-and-tablet {
-    grid-template-columns: 1fr;
-    gap: $spacing-4;
-  }
-}
-
-.impact-card {
-  text-align: center;
-  padding: $spacing-10;
-  
-  @include mobile {
-    padding: $spacing-8;
-  }
-}
-
-.impact-number {
-  font-size: $text-5xl;
-  font-weight: 700;
-  font-family: $font-primary;
-  display: block;
+.research-title {
+  font-size: $text-2xl;
   margin-bottom: $spacing-3;
-  
+
   @include mobile {
-    font-size: $text-4xl;
+    font-size: $text-xl;
   }
 }
 
-.impact-label {
+.research-note {
   color: $color-text-secondary;
-  font-size: $text-base;
-  
-  @include mobile {
+  max-width: 68ch;
+  margin-bottom: $spacing-4;
+}
+
+.research-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+  max-width: 72ch;
+
+  li {
+    padding-left: $spacing-4;
+    border-left: 2px solid rgba($accent, 0.4);
+    color: $color-text-secondary;
     font-size: $text-sm;
   }
 }
-</style>
 
+.research-link {
+  display: inline-block;
+  margin-top: $spacing-6;
+  font-weight: 600;
+  text-decoration: none;
+}
+</style>

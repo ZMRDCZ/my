@@ -14,8 +14,7 @@ import AppHeader from './components/layout/AppHeader.vue'
 import AppFooter from './components/layout/AppFooter.vue'
 
 onMounted(() => {
-  // Add any global initialization logic here
-  console.log('Portfolio app initialized')
+  // место для глобальной инициализации
 })
 </script>
 
@@ -29,6 +28,11 @@ onMounted(() => {
 .main-content {
   flex: 1;
   width: 100%;
+  padding-top: 72px;
+
+  @media (max-width: 639px) {
+    padding-top: 60px;
+  }
 }
 </style>
 

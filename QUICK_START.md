@@ -86,7 +86,3 @@ npm run deploy           # Деплой на GitHub Pages
 
 **Просто запустите и всё!** 🚀
 
----
-
-Подробная документация: [MIGRATION_GUIDE.md](./MIGRATION_GUIDE.md)
-

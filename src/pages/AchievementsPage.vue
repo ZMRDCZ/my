@@ -1,116 +1,117 @@
 <template>
   <div class="achievements-page">
-    <section class="page-header section">
+    <section class="page-header">
       <div class="container">
-        <h1 class="page-title text-gradient">Достижения</h1>
-        <p class="page-description">
-          Награды, стипендии и признание в научной и технической сферах
-        </p>
+        <h1 class="page-title">{{ t('achievements.title') }}</h1>
+        <p class="page-subtitle">{{ t('achievements.subtitle') }}</p>
       </div>
     </section>
 
-    <section class="main-achievement section">
+    <section class="section section--tight">
       <div class="container">
-        <div class="featured-card card">
-          <div class="featured-icon">🏆</div>
-          <h2 class="featured-title text-gradient-gold">
-            Стипендия Правительства Российской Федерации
-          </h2>
-          <p class="featured-year">2024</p>
-          <p class="featured-description">
-            Получил государственную стипендию Правительства Российской Федерации 
-            за выдающиеся достижения в области образования и науки. Признание вклада 
-            в развитие инклюзивного образования и технических проектов.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <section class="achievements-section section">
-      <div class="container">
-        <h2 class="section-title text-center">Все достижения</h2>
-        <div class="achievements-grid">
-          <div class="achievement-card card">
-            <div class="achievement-icon">💰</div>
-            <h3 class="achievement-title">Грант Росмолодёжи</h3>
-            <p class="achievement-year">2024</p>
-            <p class="achievement-description">
-              Получение и успешная реализация гранта "Открытые Перспективы" 
-              на сумму 300,000 рублей
-            </p>
+        <!-- Фильтры -->
+        <div class="filters">
+          <div class="filter-row" role="group" :aria-label="t('achievements.filterYears')">
+            <button
+              v-for="year in achievementYears"
+              :key="year"
+              type="button"
+              class="filter"
+              :class="{ active: activeYear === year }"
+              @click="activeYear = year"
+            >
+              {{ year === 'all' ? t('common.allYears') : year }}
+            </button>
           </div>
 
-          <div class="achievement-card card">
-            <div class="achievement-icon">🎯</div>
-            <h3 class="achievement-title">Конкурс "Твой ход"</h3>
-            <p class="achievement-year">2023</p>
-            <p class="achievement-description">
-              Участие в федеральном конкурсе молодежных проектов с 
-              инновационным решением для инклюзивного образования
-            </p>
-          </div>
-
-          <div class="achievement-card card">
-            <div class="achievement-icon">🚀</div>
-            <h3 class="achievement-title">Студенческий совет РК</h3>
-            <p class="achievement-year">2023</p>
-            <p class="achievement-description">
-              Основание и руководство студенческим советом факультета 
-              ракетно-космической техники МГТУ им. Н.Э. Баумана
-            </p>
-          </div>
-
-          <div class="achievement-card card">
-            <div class="achievement-icon">🤟</div>
-            <h3 class="achievement-title">Адаптация лекций на РЖЯ</h3>
-            <p class="achievement-year">2023-2024</p>
-            <p class="achievement-description">
-              Разработка методологии и адаптация 20+ технических лекций 
-              на русский жестовый язык
-            </p>
-          </div>
-
-          <div class="achievement-card card">
-            <div class="achievement-icon">👥</div>
-            <h3 class="achievement-title">Программа наставничества</h3>
-            <p class="achievement-year">2023</p>
-            <p class="achievement-description">
-              Создание и запуск программы наставничества для 80+ студентов 
-              младших курсов
-            </p>
-          </div>
-
-          <div class="achievement-card card">
-            <div class="achievement-icon">🌟</div>
-            <h3 class="achievement-title">АНО "Открытые Перспективы"</h3>
-            <p class="achievement-year">2022-настоящее время</p>
-            <p class="achievement-description">
-              Активная работа в организации, охват 500+ бенефициаров, 
-              реализация 5+ проектов
-            </p>
+          <div class="filter-row" role="group" :aria-label="t('achievements.filterCategories')">
+            <button
+              v-for="category in achievementCategories"
+              :key="category.value"
+              type="button"
+              class="filter filter--ghost"
+              :class="{ active: activeCategory === category.value }"
+              @click="activeCategory = category.value"
+            >
+              {{ category.label }}
+            </button>
           </div>
         </div>
-      </div>
-    </section>
 
-    <section class="stats-section section">
-      <div class="container">
-        <div class="stats-grid">
-          <div class="stat-card card">
-            <div class="stat-number text-gradient-gold">15+</div>
-            <div class="stat-label">Реализованных проектов</div>
-          </div>
-          <div class="stat-card card">
-            <div class="stat-number text-gradient-gold">500+</div>
-            <div class="stat-label">Участников</div>
-          </div>
-          <div class="stat-card card">
-            <div class="stat-number text-gradient-gold">300K</div>
-            <div class="stat-label">Привлечённых средств</div>
-          </div>
-          <div class="stat-card card">
-            <div class="stat-number text-gradient-gold">3</div>
-            <div class="stat-label">Года активности</div>
+        <!-- Хронология -->
+        <div v-if="groups.length" class="timeline">
+          <section v-for="group in groups" :key="group.year" class="year-block">
+            <h2 class="year-marker">{{ group.year }}</h2>
+
+            <div class="cards">
+              <article v-for="item in group.items" :key="item.id" class="ach-card">
+                <PhotoStrip v-if="item.images?.length" :images="item.images" :alt="item.title" />
+
+                <div class="ach-row">
+                  <span class="ach-icon" aria-hidden="true">
+                    <AppIcon :name="item.icon" />
+                  </span>
+
+                  <div class="ach-body">
+                    <div class="ach-meta">
+                      <span class="ach-category">{{ categoryLabel(item.category) }}</span>
+                      <span v-if="item.date" class="ach-date">{{ item.date }}</span>
+                    </div>
+
+                    <h3 class="ach-title">{{ item.title }}</h3>
+                    <p class="ach-description">{{ item.description }}</p>
+
+                    <ul v-if="item.details?.length" class="ach-details">
+                      <li v-for="line in item.details" :key="line">{{ line }}</li>
+                    </ul>
+
+                    <div v-if="item.result || item.role" class="ach-badges">
+                      <span v-if="item.result" class="ach-badge ach-badge--result">
+                        {{ item.result }}
+                      </span>
+                      <span v-if="item.role" class="ach-badge">{{ item.role }}</span>
+                    </div>
+
+                    <a
+                      v-if="item.source"
+                      :href="item.source.url"
+                      class="ach-source"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {{ item.source.label }} →
+                    </a>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+        </div>
+
+        <p v-else class="empty">{{ t('common.empty') }}</p>
+
+        <!-- Архив -->
+        <div v-if="archivedAchievements.length" class="archive">
+          <button type="button" class="archive-toggle" @click="showArchive = !showArchive">
+            {{ showArchive ? t('common.archiveHide') : `${t('common.archive')} (${archivedAchievements.length})` }}
+          </button>
+
+          <div v-if="showArchive" class="cards archive-cards">
+            <article v-for="item in archivedAchievements" :key="item.id" class="ach-card ach-card--muted">
+              <PhotoStrip v-if="item.images?.length" :images="item.images" :alt="item.title" />
+              <div class="ach-row">
+                <span class="ach-icon" aria-hidden="true">
+                  <AppIcon :name="item.icon" />
+                </span>
+                <div class="ach-body">
+                  <div class="ach-meta">
+                    <span class="ach-category">{{ item.year }}</span>
+                  </div>
+                  <h3 class="ach-title">{{ item.title }}</h3>
+                  <p class="ach-description">{{ item.description }}</p>
+                </div>
+              </div>
+            </article>
           </div>
         </div>
       </div>
@@ -119,225 +120,302 @@
 </template>
 
 <script setup lang="ts">
-// No additional logic needed
+import { computed, ref } from 'vue'
+import AppIcon from '@/components/ui/AppIcon.vue'
+import PhotoStrip from '@/components/ui/PhotoStrip.vue'
+import {
+  achievementYears,
+  getAchievementCategories,
+  getArchivedAchievements,
+  getCurrentAchievements
+} from '@/constants/achievements'
+import { useI18n } from '@/i18n'
+import type { AchievementCategory } from '@/types'
+
+const { locale, t } = useI18n()
+
+const achievementCategories = computed(() => getAchievementCategories(locale.value))
+const currentAchievements = computed(() => getCurrentAchievements(locale.value))
+const archivedAchievements = computed(() => getArchivedAchievements(locale.value))
+
+const activeYear = ref('all')
+const activeCategory = ref('all')
+const showArchive = ref(false)
+
+const filtered = computed(() =>
+  currentAchievements.value.filter((item) => {
+    const byYear = activeYear.value === 'all' || item.year === activeYear.value
+    const byCategory = activeCategory.value === 'all' || item.category === activeCategory.value
+    return byYear && byCategory
+  })
+)
+
+/** Годы по убыванию: 2026 → 2023. */
+const groups = computed(() => {
+  const years = Array.from(new Set(filtered.value.map((item) => item.year))).sort(
+    (a, b) => Number(b) - Number(a)
+  )
+
+  return years.map((year) => ({
+    year,
+    items: filtered.value.filter((item) => item.year === year)
+  }))
+})
+
+const categoryLabel = (value: AchievementCategory) =>
+  achievementCategories.value.find((category) => category.value === value)?.label ?? value
 </script>
 
 <style lang="scss" scoped>
-.page-header {
-  text-align: center;
-  padding-top: 120px;
-  
-  @include mobile {
-    padding-top: 100px;
-  }
+.section--tight {
+  padding: $spacing-6 0 $spacing-16;
 }
 
-.page-title {
-  font-size: $text-5xl;
-  margin-bottom: $spacing-4;
-  
-  @include mobile {
-    font-size: $text-4xl;
-  }
-  
-  @include xs {
-    font-size: $text-3xl;
-  }
-}
+// --- Фильтры ---
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+  margin-bottom: $spacing-10;
 
-.page-description {
-  font-size: $text-xl;
-  color: $color-text-secondary;
-  max-width: 600px;
-  margin: 0 auto;
-  
   @include mobile {
-    font-size: $text-lg;
-  }
-  
-  @include xs {
-    font-size: $text-base;
-  }
-}
-
-.featured-card {
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: center;
-  padding: $spacing-12;
-  
-  @include mobile {
-    padding: $spacing-8;
-  }
-  
-  @include xs {
-    padding: $spacing-6;
-  }
-}
-
-.featured-icon {
-  font-size: 5rem;
-  margin-bottom: $spacing-6;
-  
-  @include mobile {
-    font-size: 4rem;
-    margin-bottom: $spacing-4;
-  }
-}
-
-.featured-title {
-  font-size: $text-4xl;
-  margin-bottom: $spacing-4;
-  
-  @include mobile {
-    font-size: $text-3xl;
-  }
-  
-  @include xs {
-    font-size: $text-2xl;
-  }
-}
-
-.featured-year {
-  font-size: $text-2xl;
-  color: $color-highlight;
-  margin-bottom: $spacing-6;
-  font-weight: 700;
-  font-family: $font-primary;
-  
-  @include mobile {
-    font-size: $text-xl;
-    margin-bottom: $spacing-4;
-  }
-}
-
-.featured-description {
-  font-size: $text-lg;
-  color: $color-text-secondary;
-  line-height: 1.8;
-  
-  @include mobile {
-    font-size: $text-base;
-  }
-}
-
-.section-title {
-  font-size: $text-4xl;
-  margin-bottom: $spacing-12;
-  
-  @include mobile {
-    font-size: $text-3xl;
-    margin-bottom: $spacing-8;
-  }
-  
-  @include xs {
-    font-size: $text-2xl;
     margin-bottom: $spacing-6;
   }
 }
 
-.achievements-grid {
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-2;
+
+  @include mobile {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: $spacing-1;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
+
+.filter {
+  padding: $spacing-2 $spacing-4;
+  min-height: 40px;
+  border: 1px solid $line;
+  border-radius: $radius-full;
+  background: transparent;
+  color: $color-text-secondary;
+  font-size: $text-sm;
+  font-weight: 500;
+  white-space: nowrap;
+
+  &:hover {
+    border-color: rgba($accent, 0.5);
+    color: $ink;
+  }
+
+  &.active {
+    background: $ink;
+    border-color: $ink;
+    color: $paper;
+  }
+
+  &--ghost {
+    border-color: transparent;
+    background: $paper-sunken;
+
+    &.active {
+      background: $accent-soft;
+      border-color: rgba($accent, 0.4);
+      color: $accent-ink;
+    }
+  }
+}
+
+// --- Хронология ---
+.year-block {
+  margin-bottom: $spacing-12;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.year-marker {
+  font-size: $text-3xl;
+  padding-bottom: $spacing-2;
+  margin-bottom: $spacing-6;
+  border-bottom: 2px solid $ink;
+
+  @include mobile {
+    font-size: $text-2xl;
+    margin-bottom: $spacing-4;
+  }
+}
+
+.cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: $spacing-6;
-  
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: $spacing-4;
+
   @include mobile {
     grid-template-columns: 1fr;
-    gap: $spacing-4;
   }
 }
 
-.achievement-card {
-  text-align: center;
-  
+.ach-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: $paper-raised;
+  border: 1px solid $line;
+  border-radius: $radius-lg;
+  transition: border-color $transition-normal, box-shadow $transition-normal, transform $transition-normal;
+
+  &:hover {
+    border-color: rgba($accent, 0.4);
+    box-shadow: $shadow-md;
+    transform: translateY(-2px);
+  }
+
+  &--muted {
+    background: transparent;
+    border-style: dashed;
+
+    &:hover {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+}
+
+.ach-row {
+  display: flex;
+  gap: $spacing-4;
+  padding: $spacing-5;
+
   @include mobile {
-    padding: $spacing-5;
+    padding: $spacing-4;
+    gap: $spacing-3;
   }
 }
 
-.achievement-icon {
-  font-size: 3rem;
-  margin-bottom: $spacing-4;
-  
-  @include mobile {
-    font-size: 2.5rem;
-    margin-bottom: $spacing-3;
-  }
+.ach-icon {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  color: $accent-ink;
+  background: $paper-sunken;
+  border-radius: $radius-md;
 }
 
-.achievement-title {
-  font-size: $text-xl;
-  color: $color-accent;
+.ach-body {
+  min-width: 0;
+}
+
+.ach-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-2;
   margin-bottom: $spacing-2;
-  
-  @include mobile {
-    font-size: $text-lg;
-  }
 }
 
-.achievement-year {
-  font-size: $text-sm;
-  color: $color-highlight;
-  font-weight: 700;
-  margin-bottom: $spacing-3;
-  font-family: $font-primary;
-}
-
-.achievement-description {
-  color: $color-text-secondary;
-  line-height: 1.6;
-  font-size: $text-sm;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: $spacing-6;
-  
-  @include mobile-and-tablet {
-    grid-template-columns: repeat(2, 1fr);
-    gap: $spacing-4;
-  }
-  
-  @include xs {
-    grid-template-columns: 1fr;
-  }
-}
-
-.stat-card {
-  text-align: center;
-  padding: $spacing-8;
-  
-  @include mobile {
-    padding: $spacing-6;
-  }
-}
-
-.stat-number {
-  font-size: $text-5xl;
-  font-weight: 700;
-  font-family: $font-primary;
-  display: block;
-  margin-bottom: $spacing-3;
-  
-  @include mobile {
-    font-size: $text-4xl;
-  }
-  
-  @include xs {
-    font-size: $text-3xl;
-  }
-}
-
-.stat-label {
-  color: $color-text-secondary;
-  font-size: $text-base;
+.ach-category,
+.ach-date {
+  font-size: $text-xs;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  
+  letter-spacing: 0.06em;
+  color: $color-text-muted;
+}
+
+.ach-title {
+  font-size: $text-lg;
+  line-height: 1.3;
+  margin-bottom: $spacing-2;
+
   @include mobile {
-    font-size: $text-sm;
+    font-size: $text-base;
   }
+}
+
+.ach-description {
+  color: $color-text-secondary;
+  font-size: $text-sm;
+}
+
+.ach-details {
+  margin-top: $spacing-3;
+  padding-left: $spacing-5;
+  color: $color-text-secondary;
+  font-size: $text-sm;
+
+  li {
+    margin-bottom: 2px;
+  }
+}
+
+.ach-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-2;
+  margin-top: $spacing-3;
+}
+
+.ach-badge {
+  padding: 2px $spacing-2;
+  border-radius: $radius-full;
+  background: $paper-sunken;
+  color: $color-text-secondary;
+  font-size: $text-xs;
+  font-weight: 600;
+
+  &--result {
+    background: $accent-soft;
+    color: $accent-ink;
+  }
+}
+
+.ach-source {
+  display: inline-block;
+  margin-top: $spacing-3;
+  font-size: $text-sm;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.empty {
+  color: $color-text-muted;
+  padding: $spacing-8 0;
+}
+
+// --- Архив ---
+.archive {
+  margin-top: $spacing-12;
+  padding-top: $spacing-8;
+  border-top: 1px solid $line;
+}
+
+.archive-toggle {
+  padding: $spacing-2 $spacing-4;
+  min-height: 44px;
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  background: transparent;
+  color: $color-text-secondary;
+  font-size: $text-sm;
+  font-weight: 500;
+
+  &:hover {
+    border-color: rgba($accent, 0.5);
+    color: $ink;
+  }
+}
+
+.archive-cards {
+  margin-top: $spacing-4;
 }
 </style>
-

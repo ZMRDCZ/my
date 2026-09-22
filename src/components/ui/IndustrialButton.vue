@@ -75,94 +75,78 @@ const handleClick = (event: Event) => {
   align-items: center;
   justify-content: center;
   gap: $spacing-2;
-  border: none;
+  min-height: 44px;
+  border: 1px solid transparent;
   border-radius: $radius-md;
-  font-family: $font-primary;
+  font-family: $font-secondary;
   font-weight: 600;
   cursor: pointer;
-  transition: $transition-normal;
-  position: relative;
-  overflow: hidden;
   text-decoration: none;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: $transition-slow;
-  }
-  
+  transition: background $transition-normal, border-color $transition-normal,
+    color $transition-normal, box-shadow $transition-normal, transform $transition-normal;
+
   &:hover:not(.disabled):not(.loading) {
-    transform: translateY(-2px);
-    
-    &::before {
-      left: 100%;
-    }
+    transform: translateY(-1px);
   }
-  
-  // Variants
+
+  // Варианты
   &.primary {
-    background: $gradient-industrial;
-    color: $color-white;
-    
+    background: $accent-ink;
+    color: $paper;
+
     &:hover:not(.disabled) {
-      @include industrial-glow($color-accent, 5px);
+      background: $accent;
+      box-shadow: $shadow-md;
     }
   }
-  
+
   &.secondary {
-    background: transparent;
-    border: 2px solid $color-accent;
-    color: $color-accent;
-    
+    background: $paper-raised;
+    border-color: $line;
+    color: $ink;
+
     &:hover:not(.disabled) {
-      background: $color-accent;
-      color: $color-primary;
+      border-color: rgba($accent, 0.55);
+      box-shadow: $shadow-sm;
     }
   }
-  
+
   &.tertiary {
     background: transparent;
-    color: $color-highlight;
-    border: 2px solid $color-highlight;
-    
+    color: $accent-ink;
+    border-color: transparent;
+
     &:hover:not(.disabled) {
-      background: $color-highlight;
-      color: $color-white;
-      @include industrial-glow($color-highlight, 5px);
+      background: $accent-soft;
     }
   }
-  
-  // Sizes
+
+  // Размеры
   &.sm {
     padding: $spacing-2 $spacing-4;
     font-size: $text-sm;
   }
-  
+
   &.md {
     padding: $spacing-3 $spacing-6;
     font-size: $text-base;
   }
-  
+
   &.lg {
     padding: $spacing-4 $spacing-8;
     font-size: $text-lg;
   }
-  
-  // States
+
+  // Состояния
   &.disabled {
-    opacity: 0.6;
+    opacity: 0.55;
     cursor: not-allowed;
     transform: none !important;
   }
-  
+
   &.loading {
     cursor: not-allowed;
-    
+
     .button-content {
       opacity: 0.7;
     }

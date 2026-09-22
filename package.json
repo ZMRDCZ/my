@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
+    "test": "node scripts/check-content.mjs",
     "preview": "vite preview",
     "deploy": "npm run build && node -e \"require('fs').writeFileSync('dist/.nojekyll','')\" && gh-pages -d dist"
   },

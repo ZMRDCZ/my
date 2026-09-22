@@ -85,7 +85,6 @@
 ├── deploy.sh                   # Деплой скрипт (Linux/Mac)
 ├── deploy.bat                  # Деплой скрипт (Windows)
 ├── README.md                   # Документация
-├── MIGRATION_GUIDE.md          # Подробное руководство
 ├── QUICK_START.md              # Быстрый старт
 └── .gitignore                  # Git ignore
 ```
@@ -201,7 +200,6 @@ npm run deploy
 Создано 4 файла документации:
 
 1. **README.md** - Основная документация проекта
-2. **MIGRATION_GUIDE.md** - Подробное руководство по миграции
 3. **QUICK_START.md** - Быстрый старт
 4. **PROJECT_SUMMARY.md** - Этот файл, краткая сводка
 

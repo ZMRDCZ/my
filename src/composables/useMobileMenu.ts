@@ -1,40 +1,40 @@
-import { ref, watch } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+
+/** Порог, на котором меню перестаёт быть выпадающей панелью. */
+const WIDE_SCREEN = 1024
 
 export function useMobileMenu() {
   const isOpen = ref(false)
 
   const open = () => {
     isOpen.value = true
-    document.body.style.overflow = 'hidden'
   }
 
   const close = () => {
     isOpen.value = false
-    document.body.style.overflow = ''
   }
 
   const toggle = () => {
-    if (isOpen.value) {
-      close()
-    } else {
-      open()
-    }
+    isOpen.value = !isOpen.value
   }
 
-  // Close menu on route change
-  watch(isOpen, (newValue) => {
-    if (newValue) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
+  // Пока панель открыта, страница под ней не прокручивается
+  watch(isOpen, (value) => {
+    document.body.style.overflow = value ? 'hidden' : ''
   })
 
-  return {
-    isOpen,
-    open,
-    close,
-    toggle
+  // При переходе на широкий экран панель не должна оставаться открытой
+  const onResize = () => {
+    if (window.innerWidth >= WIDE_SCREEN && isOpen.value) {
+      close()
+    }
   }
-}
 
+  onMounted(() => window.addEventListener('resize', onResize))
+  onBeforeUnmount(() => {
+    window.removeEventListener('resize', onResize)
+    document.body.style.overflow = ''
+  })
+
+  return { isOpen, open, close, toggle }
+}

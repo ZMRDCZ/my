@@ -19,15 +19,15 @@ body {
   font-family: $font-body;
   background: $bg-primary;
   color: $color-text-primary;
-  line-height: 1.6;
+  line-height: 1.65;
   overflow-x: hidden;
   min-height: 100vh;
-  
-  // Industrial background pattern
-  background-image: 
-    radial-gradient(circle at 20% 50%, rgba(27, 73, 101, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(13, 71, 161, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 40% 20%, rgba(98, 182, 203, 0.08) 0%, transparent 50%);
+  font-size: 16px;
+
+  // Едва заметная тёплая подсветка вместо синих пятен
+  background-image:
+    radial-gradient(circle at 15% 0%, rgba(180, 99, 42, 0.05) 0%, transparent 45%),
+    radial-gradient(circle at 85% 10%, rgba(47, 106, 90, 0.04) 0%, transparent 40%);
   background-attachment: fixed;
 }
 
@@ -90,7 +90,9 @@ h1, h2, h3, h4, h5, h6 {
   font-family: $font-primary;
   font-weight: 700;
   line-height: 1.2;
-  color: $color-white;
+  color: $ink;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
 }
 
 h1 {
@@ -131,11 +133,11 @@ h3 {
 
 // Links
 a {
-  color: $color-accent;
+  color: $accent-ink;
   transition: $transition-normal;
-  
+
   &:hover {
-    color: $color-industrial-cyan;
+    color: $accent;
   }
 }
 
@@ -242,23 +244,23 @@ button {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: $color-accent;
+  background: $color-gray-300;
   border-radius: $radius-md;
   
   &:hover {
-    background: $color-industrial-cyan;
+    background: $color-gray-400;
   }
 }
 
 // Selection
 ::selection {
-  background: rgba($color-accent, 0.3);
-  color: $color-white;
+  background: rgba($accent, 0.22);
+  color: $ink;
 }
 
 ::-moz-selection {
-  background: rgba($color-accent, 0.3);
-  color: $color-white;
+  background: rgba($accent, 0.22);
+  color: $ink;
 }
 
 // Loading State
@@ -304,3 +306,78 @@ img {
   border-width: 0;
 }
 
+
+// --- Общие блоки контента ---
+
+// Шапка раздела
+.page-header {
+  padding: $spacing-16 0 $spacing-8;
+  text-align: center;
+
+  @include mobile {
+    padding: $spacing-10 0 $spacing-6;
+  }
+
+  .page-title {
+    margin-bottom: $spacing-3;
+  }
+
+  .page-subtitle {
+    color: $color-text-secondary;
+    font-size: $text-lg;
+    max-width: 62ch;
+    margin: 0 auto;
+
+    @include mobile {
+      font-size: $text-base;
+    }
+  }
+}
+
+// Облако тегов
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-2;
+}
+
+.tag {
+  display: inline-block;
+  padding: $spacing-2 $spacing-3;
+  background: $paper-raised;
+  border: 1px solid $line;
+  border-radius: $radius-full;
+  color: $color-text-secondary;
+  font-size: $text-sm;
+  line-height: 1.3;
+  transition: $transition-normal;
+
+  &:hover {
+    border-color: rgba($accent, 0.5);
+    color: $ink;
+  }
+
+  &.tag--accent {
+    background: $accent-soft;
+    border-color: rgba($accent, 0.35);
+    color: $accent-ink;
+  }
+
+  &.tag--second {
+    background: $second-soft;
+    border-color: rgba($second, 0.3);
+    color: $second;
+  }
+}
+
+// Убираем анимации для тех, кто их отключил
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

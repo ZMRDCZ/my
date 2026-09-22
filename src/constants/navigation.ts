@@ -1,13 +1,11 @@
-import type { NavigationItem } from '../types'
-
-export const navigationItems: NavigationItem[] = [
-  { label: 'Главная', path: '/' },
-  { label: 'О себе', path: '/about' },
-  { label: 'Достижения', path: '/achievements' },
-  { label: 'Проекты', path: '/projects' },
-  { label: 'Публикации', path: '/publications' },
-  { label: 'Инициативы', path: '/initiatives' },
-  { label: 'Галерея', path: '/gallery' },
-  { label: 'Контакты', path: '/contacts' }
+/** Пункты меню: подпись берётся из словаря интерфейса по ключу. */
+export const navigationItems: { key: string; path: string }[] = [
+  { key: 'nav.home', path: '/' },
+  { key: 'nav.about', path: '/about' },
+  { key: 'nav.achievements', path: '/achievements' },
+  { key: 'nav.projects', path: '/projects' },
+  { key: 'nav.publications', path: '/publications' },
+  { key: 'nav.initiatives', path: '/initiatives' },
+  // Галерея пока скрыта из меню. Вернуть: { key: 'nav.gallery', path: '/gallery' }
+  { key: 'nav.contacts', path: '/contacts' }
 ]
-

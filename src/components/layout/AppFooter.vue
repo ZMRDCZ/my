@@ -3,41 +3,62 @@
     <div class="container">
       <div class="footer-content">
         <div class="footer-info">
-          <h3 class="footer-title text-gradient">Дмитрий Комаров</h3>
-          <p class="footer-description">
-            Инженер, исследователь и организатор инклюзивных инициатив
-          </p>
+          <p class="footer-title">{{ profile.name }}</p>
+          <p class="footer-description">{{ profile.headline }}</p>
+          <p class="footer-place">{{ contactInfo.city }} · {{ contactInfo.timezone }}</p>
         </div>
-        
-        <div class="footer-links">
-          <h4 class="footer-section-title">Навигация</h4>
+
+        <nav class="footer-links" :aria-label="t('footer.nav')">
+          <h2 class="footer-section-title">{{ t('footer.sections') }}</h2>
           <ul class="footer-nav">
             <li v-for="item in navigationItems" :key="item.path">
               <router-link :to="item.path" class="footer-link">
-                {{ item.label }}
+                {{ t(item.key) }}
               </router-link>
+            </li>
+            <li>
+              <router-link to="/resume" class="footer-link">{{ t('nav.resume') }}</router-link>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="footer-contact">
+          <h2 class="footer-section-title">{{ t('footer.contact') }}</h2>
+          <ul class="footer-nav">
+            <li v-for="item in directContacts" :key="item.name">
+              <a
+                :href="item.url"
+                class="footer-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                :aria-label="item.ariaLabel"
+              >
+                {{ item.name }}
+              </a>
             </li>
           </ul>
         </div>
-        
-        <div class="footer-contact">
-          <h4 class="footer-section-title">Контакты</h4>
-          <p class="footer-text">
-            Свяжитесь со мной для сотрудничества
-          </p>
-          <router-link to="/contacts" class="footer-cta">
-            Написать мне
-          </router-link>
+
+        <div class="footer-profiles">
+          <h2 class="footer-section-title">{{ t('footer.profiles') }}</h2>
+          <ul class="footer-nav">
+            <li v-for="item in profileLinks" :key="item.name">
+              <a
+                :href="item.url"
+                class="footer-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                :aria-label="item.ariaLabel"
+              >
+                {{ item.name }}
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
-      
+
       <div class="footer-bottom">
-        <p class="copyright">
-          © {{ currentYear }} Дмитрий Комаров. Все права защищены.
-        </p>
-        <p class="powered-by">
-          Разработано с использованием Vue 3 + Vite
-        </p>
+        <p class="footer-year">{{ currentYear }}</p>
       </div>
     </div>
   </footer>
@@ -46,17 +67,27 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { navigationItems } from '@/constants/navigation'
+import { getContactInfo, getDirectContacts, getProfileLinks } from '@/constants/contacts'
+import { getProfile } from '@/constants/about'
+import { useI18n } from '@/i18n'
+
+const { locale, t } = useI18n()
+
+const profile = computed(() => getProfile(locale.value))
+const contactInfo = computed(() => getContactInfo(locale.value))
+const directContacts = computed(() => getDirectContacts(locale.value, t))
+const profileLinks = computed(() => getProfileLinks(locale.value, t))
 
 const currentYear = computed(() => new Date().getFullYear())
 </script>
 
 <style lang="scss" scoped>
 .app-footer {
-  background: $bg-secondary;
-  border-top: 1px solid rgba($color-accent, 0.2);
+  background: $paper-sunken;
+  border-top: 1px solid $line;
   padding: $spacing-12 0 $spacing-6;
   margin-top: auto;
-  
+
   @include mobile {
     padding: $spacing-8 0 $spacing-4;
   }
@@ -64,37 +95,54 @@ const currentYear = computed(() => new Date().getFullYear())
 
 .footer-content {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
   gap: $spacing-8;
   margin-bottom: $spacing-8;
-  
+
   @include mobile-and-tablet {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: $spacing-6;
-    text-align: center;
+  }
+
+  @include xs {
+    grid-template-columns: 1fr;
+    gap: $spacing-5;
+  }
+}
+
+.footer-info {
+  @include mobile-and-tablet {
+    grid-column: 1 / -1;
   }
 }
 
 .footer-title {
-  font-size: $text-2xl;
-  margin-bottom: $spacing-3;
   font-family: $font-primary;
-  
-  @include mobile {
-    font-size: $text-xl;
-  }
+  font-weight: 800;
+  font-size: $text-xl;
+  color: $ink;
+  margin-bottom: $spacing-2;
 }
 
 .footer-description {
   color: $color-text-secondary;
-  line-height: 1.6;
+  max-width: 40ch;
+}
+
+.footer-place {
+  margin-top: $spacing-2;
+  color: $color-text-muted;
+  font-size: $text-sm;
 }
 
 .footer-section-title {
-  font-size: $text-lg;
-  color: $color-accent;
-  margin-bottom: $spacing-4;
-  font-family: $font-primary;
+  font-size: $text-sm;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: $color-text-muted;
+  font-family: $font-secondary;
+  font-weight: 600;
+  margin-bottom: $spacing-3;
 }
 
 .footer-nav {
@@ -102,69 +150,27 @@ const currentYear = computed(() => new Date().getFullYear())
   display: flex;
   flex-direction: column;
   gap: $spacing-2;
-  
-  @include mobile-and-tablet {
-    align-items: center;
-  }
 }
 
 .footer-link {
   color: $color-text-secondary;
   text-decoration: none;
-  transition: $transition-normal;
+  font-size: $text-sm;
   display: inline-block;
   padding: $spacing-1 0;
-  
-  &:hover {
-    color: $color-industrial-cyan;
-    transform: translateX(5px);
-    
-    @include mobile-and-tablet {
-      transform: none;
-    }
-  }
-}
 
-.footer-text {
-  color: $color-text-secondary;
-  margin-bottom: $spacing-4;
-  line-height: 1.6;
-}
-
-.footer-cta {
-  display: inline-block;
-  padding: $spacing-3 $spacing-6;
-  background: $gradient-industrial;
-  color: $color-white;
-  text-decoration: none;
-  border-radius: $radius-md;
-  font-weight: 600;
-  transition: $transition-normal;
-  
   &:hover {
-    transform: translateY(-2px);
-    @include industrial-glow($color-accent, 5px);
+    color: $accent-ink;
   }
 }
 
 .footer-bottom {
   padding-top: $spacing-6;
-  border-top: 1px solid rgba($color-accent, 0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  
-  @include mobile {
-    flex-direction: column;
-    gap: $spacing-2;
-    text-align: center;
-  }
+  border-top: 1px solid $line;
 }
 
-.copyright,
-.powered-by {
+.footer-year {
   color: $color-text-muted;
   font-size: $text-sm;
 }
 </style>
-

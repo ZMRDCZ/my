@@ -1,79 +1,97 @@
-// Gubkin University Theme - Oil & Gas Industry Colors
-// Primary Colors - Petroleum & Deep Ocean Blues
-$color-primary: #0A1929;           // Deep Navy Blue (main background)
-$color-secondary: #0D2137;         // Darker Petroleum Blue
-$color-tertiary: #1B4965;          // Industrial Blue
-$color-accent: #62B6CB;            // Steel Blue
-$color-highlight: #FF8C42;         // Industrial Amber/Orange
+// Палитра: тёплый графит / молочный.
+// Тёмный #282421, светлый #F7F1EB, акцент — охра-терракота.
+// Старые имена переменных сохранены как псевдонимы, чтобы не ломать страницы.
 
-// Industrial Accent Colors
-$color-petroleum-blue: #0D47A1;    // Deep Petroleum Blue
-$color-steel-gray: #546E7A;        // Steel Gray
-$color-industrial-cyan: #26C6DA;   // Industrial Cyan
-$color-industrial-gold: #FFA726;   // Industrial Gold/Amber
-$color-deep-ocean: #01579B;        // Deep Ocean Blue
+// --- Основа ---
+$paper:         #F7F1EB;   // фон страницы, молочный
+$paper-raised:  #FFFCF7;   // карточки и поднятые поверхности
+$paper-sunken:  #EDE5DB;   // утопленные блоки, полосы
+$ink:           #282421;   // основной текст, тёплый графит
+$ink-2:         #57504A;   // вторичный текст
+$ink-3:         #8B8178;   // приглушённый текст, подписи
+$line:          #DED3C7;   // границы
 
-// Text Colors
-$color-white: #FFFFFF;
-$color-text-primary: #E8F1F5;      // Light Blue-White
-$color-text-secondary: #B0BEC5;    // Light Steel Gray
-$color-text-muted: #78909C;        // Muted Steel
+// --- Акценты ---
+$accent:        #B4632A;   // охра-терракота: заливки, декор
+$accent-ink:    #8F4A1C;   // тот же акцент для текста и ссылок (контраст ≥ 4.5)
+$accent-soft:   #F2E5D8;   // тонированная поверхность
+$second:        #2F6A5A;   // хвойный зелёный: активные состояния
+$second-soft:   #E2EBE6;
 
-// Background Colors
-$bg-primary: $color-primary;
-$bg-secondary: $color-secondary;
-$bg-card: rgba(27, 73, 101, 0.3);  // Semi-transparent industrial blue
-$bg-card-hover: rgba(27, 73, 101, 0.5);
-$bg-overlay: rgba(10, 25, 41, 0.9);
+// --- Псевдонимы под старые имена ---
+$color-primary: $paper;              // фон и текст на заливке акцентом
+$color-secondary: $paper-sunken;
+$color-tertiary: $accent-soft;
+$color-accent: $accent;
+$color-highlight: $second;
 
-// Gradient Colors
-$gradient-petroleum: linear-gradient(135deg, $color-petroleum-blue 0%, $color-deep-ocean 100%);
-$gradient-industrial: linear-gradient(135deg, $color-tertiary 0%, $color-accent 100%);
-$gradient-accent: linear-gradient(135deg, $color-industrial-gold 0%, $color-highlight 100%);
+$color-petroleum-blue: $accent-ink;
+$color-steel-gray: $ink-3;
+$color-industrial-cyan: $accent-ink;   // цвет наведения
+$color-industrial-gold: $accent;
+$color-deep-ocean: $accent-ink;
 
-// Gray Scale (Blue-tinted)
-$color-gray-100: #ECEFF1;
-$color-gray-200: #CFD8DC;
-$color-gray-300: #B0BEC5;
-$color-gray-400: #90A4AE;
-$color-gray-500: #78909C;
-$color-gray-600: #607D8B;
-$color-gray-700: #546E7A;
-$color-gray-800: #455A64;
-$color-gray-900: #263238;
+// Текст
+$color-white: $paper-raised;         // текст поверх заливки акцентом
+$color-text-primary: $ink;
+$color-text-secondary: $ink-2;
+$color-text-muted: $ink-3;
 
-// Typography
-$font-primary: 'Orbitron', sans-serif;    // Technical/Industrial font
-$font-secondary: 'Inter', sans-serif;      // Clean modern font
-$font-body: 'Roboto', sans-serif;          // Body text
+// Фоны
+$bg-primary: $paper;
+$bg-secondary: $paper-sunken;
+$bg-card: $paper-raised;
+$bg-card-hover: #FFFFFF;
+$bg-overlay: rgba(40, 36, 33, 0.45);
 
-// Font Sizes
-$text-xs: 0.75rem;    // 12px
-$text-sm: 0.875rem;   // 14px
-$text-base: 1rem;     // 16px
-$text-lg: 1.125rem;   // 18px
-$text-xl: 1.25rem;    // 20px
-$text-2xl: 1.5rem;    // 24px
-$text-3xl: 1.875rem;  // 30px
-$text-4xl: 2.25rem;   // 36px
-$text-5xl: 3rem;      // 48px
-$text-6xl: 3.75rem;   // 60px
+// Градиенты — только мягкие, тёплые
+$gradient-petroleum: linear-gradient(135deg, $accent-ink 0%, $accent 100%);
+$gradient-industrial: linear-gradient(135deg, $accent-ink 0%, $accent 100%);
+$gradient-accent: linear-gradient(135deg, $accent 0%, #D08A4A 100%);
 
-// Spacing
-$spacing-1: 0.25rem;   // 4px
-$spacing-2: 0.5rem;    // 8px
-$spacing-3: 0.75rem;   // 12px
-$spacing-4: 1rem;      // 16px
-$spacing-5: 1.25rem;   // 20px
-$spacing-6: 1.5rem;    // 24px
-$spacing-8: 2rem;      // 32px
-$spacing-10: 2.5rem;   // 40px
-$spacing-12: 3rem;     // 48px
-$spacing-16: 4rem;     // 64px
-$spacing-20: 5rem;     // 80px
-$spacing-24: 6rem;     // 96px
+// Шкала серого — тёплая
+$color-gray-100: #F4EEE7;
+$color-gray-200: #E7DED4;
+$color-gray-300: #D8CCBF;
+$color-gray-400: #BCAE9F;
+$color-gray-500: #9C8F81;
+$color-gray-600: #7D7168;
+$color-gray-700: #5F564F;
+$color-gray-800: #443D38;
+$color-gray-900: $ink;
 
-// Breakpoints
+// Типографика
+$font-primary: 'Manrope', 'Inter', sans-serif;    // заголовки
+$font-secondary: 'Inter', sans-serif;             // интерфейс
+$font-body: 'Inter', 'Roboto', sans-serif;        // текст
+
+// Размеры текста
+$text-xs: 0.75rem;
+$text-sm: 0.875rem;
+$text-base: 1rem;
+$text-lg: 1.125rem;
+$text-xl: 1.25rem;
+$text-2xl: 1.5rem;
+$text-3xl: 1.875rem;
+$text-4xl: 2.25rem;
+$text-5xl: 3rem;
+$text-6xl: 3.75rem;
+
+// Отступы
+$spacing-1: 0.25rem;
+$spacing-2: 0.5rem;
+$spacing-3: 0.75rem;
+$spacing-4: 1rem;
+$spacing-5: 1.25rem;
+$spacing-6: 1.5rem;
+$spacing-8: 2rem;
+$spacing-10: 2.5rem;
+$spacing-12: 3rem;
+$spacing-16: 4rem;
+$spacing-20: 5rem;
+$spacing-24: 6rem;
+
+// Контрольные точки
 $breakpoint-xs: 480px;
 $breakpoint-sm: 640px;
 $breakpoint-md: 768px;
@@ -81,76 +99,66 @@ $breakpoint-lg: 1024px;
 $breakpoint-xl: 1280px;
 $breakpoint-2xl: 1536px;
 
-// Z-Index
+// Слои
 $z-modal: 1000;
 $z-dropdown: 100;
 $z-header: 50;
 $z-overlay: 40;
 
-// Border Radius
-$radius-sm: 0.25rem;   // 4px
-$radius-md: 0.5rem;    // 8px
-$radius-lg: 0.75rem;   // 12px
-$radius-xl: 1rem;      // 16px
-$radius-2xl: 1.5rem;   // 24px
+// Скругления
+$radius-sm: 0.25rem;
+$radius-md: 0.5rem;
+$radius-lg: 0.75rem;
+$radius-xl: 1rem;
+$radius-2xl: 1.5rem;
 $radius-full: 50%;
 
-// Transitions
+// Переходы
 $transition-fast: 0.15s ease;
-$transition-normal: 0.3s ease;
-$transition-slow: 0.5s ease;
+$transition-normal: 0.25s ease;
+$transition-slow: 0.4s ease;
 
-// Shadows - Industrial Theme
-$shadow-sm: 0 1px 2px 0 rgba(10, 25, 41, 0.1);
-$shadow-md: 0 4px 6px -1px rgba(10, 25, 41, 0.2);
-$shadow-lg: 0 10px 15px -3px rgba(10, 25, 41, 0.3);
-$shadow-xl: 0 20px 25px -5px rgba(10, 25, 41, 0.4);
-$shadow-industrial-blue: 0 0 20px rgba(27, 73, 101, 0.5);
-$shadow-industrial-cyan: 0 0 20px rgba(38, 198, 218, 0.4);
-$shadow-industrial-gold: 0 0 20px rgba(255, 140, 66, 0.5);
+// Тени — мягкие, тёплые, без неона
+$shadow-sm: 0 1px 2px rgba(40, 36, 33, 0.06);
+$shadow-md: 0 2px 8px rgba(40, 36, 33, 0.08);
+$shadow-lg: 0 8px 24px rgba(40, 36, 33, 0.10);
+$shadow-xl: 0 16px 40px rgba(40, 36, 33, 0.12);
+$shadow-industrial-blue: $shadow-md;
+$shadow-industrial-cyan: $shadow-md;
+$shadow-industrial-gold: $shadow-md;
 
-// Industrial Glow Effects
+// Бывшее неоновое свечение — теперь мягкая тень того же вызова
 @mixin industrial-glow($color, $size: 10px) {
-  box-shadow: 
-    0 0 $size $color,
-    0 0 #{$size * 2} rgba($color, 0.6),
-    0 0 #{$size * 3} rgba($color, 0.3);
+  box-shadow: 0 #{$size * 0.4} #{$size * 1.6} rgba($color, 0.18);
 }
 
 @mixin industrial-text-glow($color) {
   color: $color;
-  text-shadow: 
-    0 0 5px rgba($color, 0.8),
-    0 0 10px rgba($color, 0.5),
-    0 0 15px rgba($color, 0.3);
+  text-shadow: none;
 }
 
-// Border Effects
-@mixin industrial-border($color: $color-accent) {
-  border: 2px solid $color;
-  box-shadow: 
-    inset 0 0 10px rgba($color, 0.2),
-    0 0 10px rgba($color, 0.2);
+@mixin industrial-border($color: $accent) {
+  border: 1px solid rgba($color, 0.35);
 }
 
-// Card Styles
+// Карточка
 @mixin card-style {
   background: $bg-card;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba($color-accent, 0.2);
+  border: 1px solid $line;
   border-radius: $radius-lg;
   padding: $spacing-6;
-  transition: $transition-normal;
-  
+  box-shadow: $shadow-sm;
+  transition: border-color $transition-normal, box-shadow $transition-normal, transform $transition-normal;
+
   &:hover {
     background: $bg-card-hover;
-    border-color: rgba($color-accent, 0.4);
-    transform: translateY(-5px);
-    @include industrial-glow($color-accent, 5px);
+    border-color: rgba($accent, 0.45);
+    box-shadow: $shadow-lg;
+    transform: translateY(-3px);
   }
 }
 
-// Responsive Mixins
+// Адаптивные миксины
 @mixin xs {
   @media (max-width: #{$breakpoint-xs - 1px}) {
     @content;
@@ -193,25 +201,22 @@ $shadow-industrial-gold: 0 0 20px rgba(255, 140, 66, 0.5);
   }
 }
 
-// Touch device detection
 @mixin touch-device {
   @media (hover: none) and (pointer: coarse) {
     @content;
   }
 }
 
-// High DPI displays
 @mixin retina {
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     @content;
   }
 }
 
-// Gradient Text
+// Градиентный текст
 @mixin gradient-text($gradient: $gradient-industrial) {
   background: $gradient;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-

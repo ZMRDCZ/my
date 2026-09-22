@@ -1,42 +1,41 @@
 <template>
   <div class="projects-page">
-    <section class="page-header section">
+    <section class="page-header">
       <div class="container">
-        <h1 class="page-title text-gradient">Проекты</h1>
-        <p class="page-description">
-          Технические проекты, веб-разработка и инновационные решения
-        </p>
+        <h1 class="page-title">{{ t('projects.title') }}</h1>
+        <p class="page-subtitle">{{ t('projects.subtitle') }}</p>
       </div>
     </section>
 
-    <section class="filters-section">
+    <section class="section section--tight">
       <div class="container">
-        <div class="filters">
+        <div class="filters" role="group" :aria-label="t('projects.filter')">
           <button
             v-for="filter in projectFilters"
             :key="filter.value"
-            class="filter-btn"
-            :class="{ 'active': activeFilter === filter.value }"
+            type="button"
+            class="filter"
+            :class="{ active: activeFilter === filter.value }"
             @click="activeFilter = filter.value"
           >
             {{ filter.label }}
           </button>
         </div>
-      </div>
-    </section>
 
-    <section class="projects-section section">
-      <div class="container">
-        <div class="projects-grid">
-          <ProjectCard
-            v-for="project in filteredProjects"
-            :key="project.id"
-            :project="project"
-          />
+        <div v-if="filteredProjects.length" class="projects-grid">
+          <ProjectCard v-for="project in filteredProjects" :key="project.id" :project="project" />
         </div>
-        
-        <div v-if="filteredProjects.length === 0" class="no-results">
-          <p>Проекты не найдены</p>
+
+        <p v-else class="no-results">{{ t('projects.empty') }}</p>
+
+        <div v-if="archivedProjects.length" class="archive">
+          <button type="button" class="archive-toggle" @click="showArchive = !showArchive">
+            {{ showArchive ? t('common.archiveHide') : `${t('common.archive')} (${archivedProjects.length})` }}
+          </button>
+
+          <div v-if="showArchive" class="projects-grid archive-grid">
+            <ProjectCard v-for="project in archivedProjects" :key="project.id" :project="project" />
+          </div>
         </div>
       </div>
     </section>
@@ -44,102 +43,78 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 import ProjectCard from '@/components/ui/ProjectCard.vue'
-import { projects, projectFilters } from '@/constants/projects'
+import { getActiveProjects, getArchivedProjects, getProjectFilters } from '@/constants/projects'
+import { useI18n } from '@/i18n'
+
+const { locale, t } = useI18n()
+
+const projectFilters = computed(() => getProjectFilters(locale.value))
+const activeProjects = computed(() => getActiveProjects(locale.value))
+const archivedProjects = computed(() => getArchivedProjects(locale.value))
 
 const activeFilter = ref('all')
+const showArchive = ref(false)
 
 const filteredProjects = computed(() => {
-  if (activeFilter.value === 'all') {
-    return projects
-  }
-  return projects.filter(project => project.type === activeFilter.value)
+  if (activeFilter.value === 'all') return activeProjects.value
+  return activeProjects.value.filter((project) => project.type === activeFilter.value)
 })
 </script>
 
 <style lang="scss" scoped>
-.page-header {
-  text-align: center;
-  padding-top: 120px;
-  
-  @include mobile {
-    padding-top: 100px;
-  }
-}
-
-.page-title {
-  font-size: $text-5xl;
-  margin-bottom: $spacing-4;
-  
-  @include mobile {
-    font-size: $text-4xl;
-  }
-  
-  @include xs {
-    font-size: $text-3xl;
-  }
-}
-
-.page-description {
-  font-size: $text-xl;
-  color: $color-text-secondary;
-  max-width: 600px;
-  margin: 0 auto;
-  
-  @include mobile {
-    font-size: $text-lg;
-  }
-  
-  @include xs {
-    font-size: $text-base;
-  }
-}
-
-.filters-section {
-  padding: $spacing-8 0;
-  
-  @include mobile {
-    padding: $spacing-6 0;
-  }
+.section--tight {
+  padding: $spacing-6 0 $spacing-16;
 }
 
 .filters {
   display: flex;
-  justify-content: center;
-  gap: $spacing-3;
   flex-wrap: wrap;
+  gap: $spacing-2;
+  margin-bottom: $spacing-8;
+
+  @include mobile {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: $spacing-2;
+    margin-bottom: $spacing-6;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 }
 
-.filter-btn {
+.filter {
   padding: $spacing-2 $spacing-4;
+  min-height: 40px;
   background: transparent;
-  border: 2px solid rgba($color-accent, 0.3);
+  border: 1px solid $line;
+  border-radius: $radius-full;
   color: $color-text-secondary;
-  border-radius: $radius-md;
-  font-family: $font-secondary;
-  font-weight: 600;
-  transition: $transition-normal;
-  cursor: pointer;
-  
+  font-size: $text-sm;
+  font-weight: 500;
+  white-space: nowrap;
+
   &:hover {
-    border-color: $color-accent;
-    color: $color-accent;
+    border-color: rgba($accent, 0.5);
+    color: $ink;
   }
-  
+
   &.active {
-    background: $gradient-industrial;
-    border-color: transparent;
-    color: $color-white;
-    @include industrial-glow($color-accent, 3px);
+    background: $ink;
+    border-color: $ink;
+    color: $paper;
   }
 }
 
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: $spacing-6;
-  
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: $spacing-5;
+
   @include mobile {
     grid-template-columns: 1fr;
     gap: $spacing-4;
@@ -147,10 +122,33 @@ const filteredProjects = computed(() => {
 }
 
 .no-results {
-  text-align: center;
-  padding: $spacing-12;
+  padding: $spacing-12 0;
   color: $color-text-muted;
-  font-size: $text-lg;
+}
+
+.archive {
+  margin-top: $spacing-12;
+  padding-top: $spacing-8;
+  border-top: 1px solid $line;
+}
+
+.archive-toggle {
+  padding: $spacing-2 $spacing-4;
+  min-height: 44px;
+  border: 1px solid $line;
+  border-radius: $radius-md;
+  background: transparent;
+  color: $color-text-secondary;
+  font-size: $text-sm;
+  font-weight: 500;
+
+  &:hover {
+    border-color: rgba($accent, 0.5);
+    color: $ink;
+  }
+}
+
+.archive-grid {
+  margin-top: $spacing-4;
 }
 </style>
-

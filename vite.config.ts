@@ -29,9 +29,7 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks: {
-            'vue-vendor': ['vue', 'vue-router'],
-            animations: ['gsap'],
-            utils: ['@vueuse/core']
+            'vue-vendor': ['vue', 'vue-router']
           }
         }
       }
