@@ -30,7 +30,7 @@ jobs:
         run: npm run build
 
       - name: Prepare GitHub Pages artifact
-        run: node -e "require('fs').mkdirSync('dist', { recursive: true }); require('fs').writeFileSync('dist/.nojekyll','')"
+        run: touch dist/.nojekyll
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
